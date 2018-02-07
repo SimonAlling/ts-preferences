@@ -1,0 +1,36 @@
+{
+  "name": "ts-preferences",
+  "version": "0.1.0",
+  "description": "localStorage-based preference manager for web apps, userscripts etc",
+  "keywords": [
+    "preferences",
+    "settings",
+    "options",
+    "type-safe",
+    "localStorage",
+    "TypeScript"
+  ],
+  "author": {
+    "name": "Simon Alling",
+    "email": "alling.simon@gmail.com",
+    "url": "https://simonalling.se"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/simonalling/ts-preferences",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/simonalling/ts-preferences"
+  },
+  "bugs": {
+    "url": "https://github.com/simonalling/ts-preferences"
+  },
+  "main": "dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p ."
+  },
+  "devDependencies": {
+    "ts-type-guards": "^0.2.0",
+    "typescript": "^2.6.1"
+  }
+}

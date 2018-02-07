@@ -1,0 +1,7 @@
+import { PreferenceData, Preference } from "./Preference";
+
+export class BooleanPreference extends Preference<boolean> {
+    constructor(data: PreferenceData<boolean>) {
+        super(data);
+    }
+}
