@@ -28,6 +28,8 @@ export type PreferencesInterface = {
     resetAll: () => void
 }
 
+export const SIMPLE_RESPONSE_HANDLER = <T>(s: RequestSummary<T>, p: PreferencesInterface) => s.response;
+
 const LS_INFIX: string = "-preference-";
 
 export function init(
