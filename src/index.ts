@@ -19,19 +19,31 @@ export type RequestSummary<T> = {
     response: Response<T>
 }
 
-export type ResponseHandler<T> = (t: RequestSummary<T>) => Response<T>;
+export type ResponseHandler = <T>(s: RequestSummary<T>, p: PreferencesInterface) => Response<T>;
+
+export type PreferencesInterface = {
+    get: <T>(p: Preference<T>) => T
+    set: <T>(p: Preference<T>, v: T) => void
+    reset: <T>(p: Preference<T>) => void
+    resetAll: () => void
+}
 
 const LS_INFIX: string = "-preference-";
 
-export function init(preferences: PreferencesObject, localStoragePrefix: string, responseHandler: ResponseHandler<any>) {
+export function init(
+    preferences: PreferencesObject,
+    localStoragePrefix: string,
+    responseHandler: ResponseHandler,
+): PreferencesInterface {
     const PM = new PreferenceManager(preferences, localStoragePrefix + LS_INFIX);
+    const thisInterface = { get, set, reset, resetAll };
 
     function get<T>(p: Preference<T>): T {
         return responseHandler({
             action: "get",
             preference: p,
             response: PM.get<T>(p),
-        }).value;
+        }, thisInterface).value;
     }
 
     function set<T>(p: Preference<T>, value: T): void {
@@ -39,7 +51,7 @@ export function init(preferences: PreferencesObject, localStoragePrefix: string,
             action: "set",
             preference: p,
             response: PM.set<T>(p, value),
-        });
+        }, thisInterface);
     }
 
     function reset<T>(p: Preference<T>): void {
@@ -53,12 +65,7 @@ export function init(preferences: PreferencesObject, localStoragePrefix: string,
         });
     }
 
-    return {
-        get,
-        set,
-        reset,
-        resetAll,
-    };
+    return thisInterface;
 }
 
 export {
