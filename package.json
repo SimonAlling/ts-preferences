@@ -1,6 +1,6 @@
 {
   "name": "ts-preferences",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "localStorage-based preference manager for web apps, userscripts etc",
   "keywords": [
     "preferences",
