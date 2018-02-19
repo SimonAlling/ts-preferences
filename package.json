@@ -1,6 +1,6 @@
 {
   "name": "ts-preferences",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "localStorage-based preference manager for web apps, userscripts etc",
   "keywords": [
     "preferences",
@@ -28,6 +28,10 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc -d -p ."
+  },
+  "dependencies": {
+    "ts-storage": "^0.1.0",
+    "ts-type-guards": "^0.2.2"
   },
   "devDependencies": {
     "ts-storage": "^0.1.0",
