@@ -26,6 +26,7 @@ export type PreferencesInterface = {
     set: <T>(p: Preference<T>, v: T) => void
     reset: <T>(p: Preference<T>) => void
     resetAll: () => void
+    htmlMenu: (f: (ps: PreferencesObject) => HTMLElement) => HTMLElement
 }
 
 export const SIMPLE_RESPONSE_HANDLER = <T>(s: RequestSummary<T>, p: PreferencesInterface) => s.response;
@@ -38,7 +39,7 @@ export function init(
     responseHandler: ResponseHandler,
 ): PreferencesInterface {
     const PM = new PreferenceManager(preferences, localStoragePrefix + LS_INFIX);
-    const thisInterface = { get, set, reset, resetAll };
+    const thisInterface = { get, set, reset, resetAll, htmlMenu };
 
     function get<T>(p: Preference<T>): T {
         return responseHandler({
@@ -65,6 +66,10 @@ export function init(
             const p = preferences[k];
             reset(p);
         });
+    }
+
+    function htmlMenu(f: (ps: PreferencesObject) => HTMLElement): HTMLElement {
+        return f(preferences);
     }
 
     return thisInterface;
