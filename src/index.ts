@@ -1,8 +1,10 @@
 import {
     PreferenceManager,
     PreferencesObject,
+    PreferenceGroup,
     Status,
     Response,
+    flatten,
 } from "./PreferenceManager";
 import { Preference } from "./preferences/Preference";
 import { BooleanPreference } from "./preferences/BooleanPreference";
@@ -62,10 +64,7 @@ export function init(
     }
 
     function resetAll(): void {
-        Object.keys(preferences).forEach(k => {
-            const p = preferences[k];
-            reset(p);
-        });
+        flatten(preferences).forEach(reset);
     }
 
     function htmlMenu(f: (ps: PreferencesObject) => HTMLElement): HTMLElement {
@@ -80,6 +79,7 @@ export {
     Response,
     PreferenceManager,
     PreferencesObject,
+    PreferenceGroup,
     Preference,
     BooleanPreference,
     NumericPreference,

@@ -1,4 +1,4 @@
-import { isLike } from "ts-type-guards";
+import { is, isLike } from "ts-type-guards";
 import * as Storage from "ts-storage";
 import { assertUnreachable } from "./Utilities";
 import { Preference } from "./preferences/Preference";
@@ -16,7 +16,12 @@ export type Response<T> = {
 }
 
 export interface PreferencesObject {
-    readonly [key: string]: Preference<any>;
+    readonly [key: string]: Preference<any> | PreferenceGroup;
+}
+
+export interface PreferenceGroup {
+    readonly label: string
+    readonly _: PreferencesObject
 }
 
 function unknown(p: Preference<any>): string {
@@ -31,8 +36,8 @@ export class PreferenceManager {
         this.LS_PREFIX = localStoragePrefix;
         this.cache = new Map();
         let seenKeys: string[] = [];
-        Object.keys(preferences).forEach(k => {
-            const p = preferences[k];
+
+        flatten(preferences).forEach(p => {
             const key = p.key;
             if (seenKeys.indexOf(key) > -1) {
                 throw new Error(`Duplicate preference key ${JSON.stringify(key)}.`);
@@ -72,6 +77,15 @@ export class PreferenceManager {
             value: resp.value,
         };
     }
+}
+
+export function flatten(tree: PreferencesObject): Preference<any>[] {
+    return Object.keys(tree).map(k => tree[k]).reduce(
+        (acc, node) => acc.concat(
+            is(Preference)(node) ? node : flatten(node._)
+        ),
+        [] as Preference<any>[]
+    );
 }
 
 function fromStorageStatus(s: Storage.Status): Status {
