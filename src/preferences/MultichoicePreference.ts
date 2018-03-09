@@ -17,6 +17,13 @@ export class MultichoicePreference<T> extends Preference<T> {
         if (data.options.length < 2) {
             throw new Error(`options must contain at least two elements, but this was not the case for ${this.getType()} '${data.key}'.`);
         }
+        const seenOptionValues: T[] = [];
+        data.options.forEach(option => {
+            if (seenOptionValues.indexOf(option.value) > -1) {
+                throw new Error(`Multiple options with value ${JSON.stringify(option.value)} in ${this.getType()} '${data.key}'.`);
+            }
+            seenOptionValues.push(option.value);
+        });
         this.options = data.options;
     }
 
