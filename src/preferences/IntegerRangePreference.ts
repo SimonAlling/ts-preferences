@@ -1,7 +1,9 @@
+import { FromString, ParseResult } from "./Preference";
+import { IntegerPreference } from "./IntegerPreference";
 import { RangePreferenceData, RangePreference } from "./RangePreference";
 import { isInt } from "../Utilities";
 
-export class IntegerRangePreference extends RangePreference {
+export class IntegerRangePreference extends RangePreference implements FromString<number> {
     constructor(data: RangePreferenceData) {
         super(data);
         if (!isInt(data.min) || !isInt(data.max)) {
@@ -15,5 +17,10 @@ export class IntegerRangePreference extends RangePreference {
 
     fromInvalid(value: number): number {
         return Math.round(super.fromInvalid(value));
+    }
+
+    fromString(s: string): ParseResult<number> {
+        const parsed = IntegerPreference.parse(s);
+        return RangePreference.postParse(parsed, this.min, this.max);
     }
 }

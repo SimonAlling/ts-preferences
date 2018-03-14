@@ -7,6 +7,12 @@ export type PreferenceData<T> = {
 
 export type AllowedTypes = boolean | number | string
 
+export type ParseResult<T> = { value: T } | string
+
+export interface FromString<T> {
+    fromString: (s: string) => ParseResult<T>
+}
+
 export abstract class Preference<T extends AllowedTypes> {
     readonly data: PreferenceData<T>;
     readonly key: string;
