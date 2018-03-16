@@ -1,7 +1,7 @@
 import { is, isLike } from "ts-type-guards";
 import * as Storage from "ts-storage";
 import { assertUnreachable } from "./Utilities";
-import { Preference } from "./preferences/Preference";
+import { Preference, AllowedTypes } from "./preferences/Preference";
 
 export const enum Status {
     OK,
@@ -47,7 +47,7 @@ export class PreferenceManager {
         });
     }
 
-    public get<T>(preference: Preference<T>): Response<T> {
+    public get<T extends AllowedTypes>(preference: Preference<T>): Response<T> {
         const cachedValue: any = this.cache.get(preference);
         if (!isLike(preference.default)(cachedValue)) {
             // If we got undefined from cache, the preference was not among the known ones.
@@ -60,7 +60,7 @@ export class PreferenceManager {
         };
     }
 
-    public set<T>(preference: Preference<T>, value: T): Response<T> {
+    public set<T extends AllowedTypes>(preference: Preference<T>, value: T): Response<T> {
         if (!isLike(preference.default)(this.cache.get(preference))) {
             throw new Error(unknown(preference));
         }

@@ -1,4 +1,4 @@
-import { PreferenceData, Preference } from "./Preference";
+import { PreferenceData, Preference, AllowedTypes } from "./Preference";
 
 export interface MultichoicePreferenceOption<T> {
     value: T,
@@ -9,7 +9,7 @@ export type MultichoicePreferenceData<T> = PreferenceData<T> & {
     options: MultichoicePreferenceOption<T>[],
 }
 
-export class MultichoicePreference<T> extends Preference<T> {
+export class MultichoicePreference<T extends AllowedTypes> extends Preference<T> {
     readonly options: MultichoicePreferenceOption<T>[];
 
     constructor(data: MultichoicePreferenceData<T>) {

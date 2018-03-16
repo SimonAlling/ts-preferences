@@ -5,7 +5,9 @@ export type PreferenceData<T> = {
     description: string
 }
 
-export abstract class Preference<T> {
+export type AllowedTypes = boolean | number | string
+
+export abstract class Preference<T extends AllowedTypes> {
     readonly data: PreferenceData<T>;
     readonly key: string;
     readonly default: T;

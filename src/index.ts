@@ -6,7 +6,7 @@ import {
     Response,
     flatten,
 } from "./PreferenceManager";
-import { Preference } from "./preferences/Preference";
+import { Preference, AllowedTypes } from "./preferences/Preference";
 import { BooleanPreference } from "./preferences/BooleanPreference";
 import { NumericPreference } from "./preferences/NumericPreference";
 import { StringPreference } from "./preferences/StringPreference";
@@ -15,23 +15,23 @@ import { RangePreference } from "./preferences/RangePreference";
 import { IntegerRangePreference } from "./preferences/IntegerRangePreference";
 import { MultichoicePreference } from "./preferences/MultichoicePreference";
 
-export type RequestSummary<T> = {
+export type RequestSummary<T extends AllowedTypes> = {
     action: "set" | "get"
     preference: Preference<T>
     response: Response<T>
 }
 
-export type ResponseHandler = <T>(s: RequestSummary<T>, p: PreferencesInterface) => Response<T>;
+export type ResponseHandler = <T extends AllowedTypes>(s: RequestSummary<T>, p: PreferencesInterface) => Response<T>;
 
 export type PreferencesInterface = {
-    get: <T>(p: Preference<T>) => T
-    set: <T>(p: Preference<T>, v: T) => void
-    reset: <T>(p: Preference<T>) => void
+    get: <T extends AllowedTypes>(p: Preference<T>) => T
+    set: <T extends AllowedTypes>(p: Preference<T>, v: T) => void
+    reset: <T extends AllowedTypes>(p: Preference<T>) => void
     resetAll: () => void
     htmlMenu: (f: (ps: PreferencesObject) => HTMLElement) => HTMLElement
 }
 
-export const SIMPLE_RESPONSE_HANDLER = <T>(s: RequestSummary<T>, p: PreferencesInterface) => s.response;
+export const SIMPLE_RESPONSE_HANDLER = <T extends AllowedTypes>(s: RequestSummary<T>, p: PreferencesInterface) => s.response;
 
 const LS_INFIX: string = "-preference-";
 
@@ -43,7 +43,7 @@ export function init(
     const PM = new PreferenceManager(preferences, localStoragePrefix + LS_INFIX);
     const thisInterface = { get, set, reset, resetAll, htmlMenu };
 
-    function get<T>(p: Preference<T>): T {
+    function get<T extends AllowedTypes>(p: Preference<T>): T {
         return responseHandler({
             action: "get",
             preference: p,
@@ -51,7 +51,7 @@ export function init(
         }, thisInterface).value;
     }
 
-    function set<T>(p: Preference<T>, value: T): void {
+    function set<T extends AllowedTypes>(p: Preference<T>, value: T): void {
         responseHandler({
             action: "set",
             preference: p,
@@ -59,7 +59,7 @@ export function init(
         }, thisInterface);
     }
 
-    function reset<T>(p: Preference<T>): void {
+    function reset<T extends AllowedTypes>(p: Preference<T>): void {
         set(p, p.default);
     }
 
@@ -75,6 +75,7 @@ export function init(
 }
 
 export {
+    AllowedTypes,
     Status,
     Response,
     PreferenceManager,
