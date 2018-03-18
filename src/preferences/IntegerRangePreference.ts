@@ -1,8 +1,5 @@
 import { RangePreferenceData, RangePreference } from "./RangePreference";
-
-function isInt(x: number): boolean {
-    return x % 1 === 0;
-}
+import { isInt } from "../Utilities";
 
 export class IntegerRangePreference extends RangePreference {
     constructor(data: RangePreferenceData) {
