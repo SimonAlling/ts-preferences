@@ -9,6 +9,8 @@ import {
 import { Preference, AllowedTypes } from "./preferences/Preference";
 import { BooleanPreference } from "./preferences/BooleanPreference";
 import { NumericPreference } from "./preferences/NumericPreference";
+import { IntegerPreference } from "./preferences/IntegerPreference";
+import { DoublePreference } from "./preferences/DoublePreference";
 import { StringPreference } from "./preferences/StringPreference";
 import { CustomPreference } from "./preferences/CustomPreference";
 import { RangePreference } from "./preferences/RangePreference";
@@ -84,6 +86,8 @@ export {
     Preference,
     BooleanPreference,
     NumericPreference,
+    IntegerPreference,
+    DoublePreference,
     StringPreference,
     CustomPreference,
     RangePreference,
