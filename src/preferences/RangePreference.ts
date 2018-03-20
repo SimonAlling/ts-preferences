@@ -1,5 +1,5 @@
 import { isString } from "ts-type-guards";
-import { PreferenceData, ParseResult } from "./Preference";
+import { PreferenceData, ParseResult, FromString } from "./Preference";
 import { NumericPreference } from "./NumericPreference";
 import { DoublePreference } from "./DoublePreference";
 
@@ -8,7 +8,7 @@ export type RangePreferenceData = PreferenceData<number> & {
     max: number
 }
 
-export class RangePreference extends NumericPreference {
+export abstract class RangePreference extends NumericPreference implements FromString<number> {
     readonly min: number;
     readonly max: number;
 
@@ -41,8 +41,5 @@ export class RangePreference extends NumericPreference {
         );
     }
 
-    fromString(s: string): ParseResult<number> {
-        const parsed = DoublePreference.parse(s);
-        return RangePreference.postParse(parsed, this.min, this.max);
-    }
+    abstract fromString(s: string): ParseResult<number>
 }

@@ -15,6 +15,7 @@ import { StringPreference } from "./preferences/StringPreference";
 import { CustomPreference } from "./preferences/CustomPreference";
 import { RangePreference } from "./preferences/RangePreference";
 import { IntegerRangePreference } from "./preferences/IntegerRangePreference";
+import { DoubleRangePreference } from "./preferences/DoubleRangePreference";
 import { MultichoicePreference } from "./preferences/MultichoicePreference";
 
 export type RequestSummary<T extends AllowedTypes> = {
@@ -92,5 +93,6 @@ export {
     CustomPreference,
     RangePreference,
     IntegerRangePreference,
+    DoubleRangePreference,
     MultichoicePreference,
 };
