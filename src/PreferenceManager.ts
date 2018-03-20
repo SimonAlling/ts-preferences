@@ -22,6 +22,7 @@ export interface PreferencesObject {
 export interface PreferenceGroup {
     readonly label: string
     readonly _: PreferencesObject
+    readonly extras?: { readonly [key: string]: any }
 }
 
 function unknown(p: Preference<any>): string {

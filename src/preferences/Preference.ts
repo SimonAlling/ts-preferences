@@ -3,6 +3,7 @@ export type PreferenceData<T> = {
     default: T
     label: string
     description: string
+    extras?: { readonly [key: string]: any }
 }
 
 export type AllowedTypes = boolean | number | string
@@ -19,6 +20,7 @@ export abstract class Preference<T extends AllowedTypes> {
     readonly default: T;
     readonly label: string;
     readonly description: string;
+    readonly extras: { readonly [key: string]: any };
 
     constructor(data: PreferenceData<T>) {
         if (data.key === "") {
@@ -29,6 +31,7 @@ export abstract class Preference<T extends AllowedTypes> {
         this.default = data.default;
         this.label = data.label;
         this.description = data.description;
+        this.extras = data.extras || {};
         if (!this.isValidValue(data, data.default)) {
             this.invalidValue(data.default);
         }
