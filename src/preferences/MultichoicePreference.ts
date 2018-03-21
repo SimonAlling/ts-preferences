@@ -19,6 +19,9 @@ export class MultichoicePreference<T extends AllowedTypes> extends Preference<T>
         }
         const seenOptionValues: T[] = [];
         data.options.forEach(option => {
+            if (!super.isValidValue(data, option.value)) {
+                throw new Error(`Option value ${JSON.stringify(option.value)} (with label '${option.label}') in ${this.getType()} '${data.key}' is invalid.`);
+            }
             if (seenOptionValues.indexOf(option.value) > -1) {
                 throw new Error(`Multiple options with value ${JSON.stringify(option.value)} in ${this.getType()} '${data.key}'.`);
             }

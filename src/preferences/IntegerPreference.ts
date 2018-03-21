@@ -8,7 +8,7 @@ export class IntegerPreference extends NumericPreference {
     }
 
     isValidValue(data: PreferenceData<number>, value: number): boolean {
-        return isInt(value);
+        return super.isValidValue(data, value) && isInt(value);
     }
 
     static parse(s: string): ParseResult<number> {

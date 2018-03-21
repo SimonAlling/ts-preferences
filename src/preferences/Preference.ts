@@ -1,9 +1,17 @@
+import { fromMaybe } from "../Utilities";
+
 export type PreferenceData<T> = {
     key: string
     default: T
     label: string
     description: string
+    constraints?: Constraint<T>[]
     extras?: { readonly [key: string]: any }
+}
+
+export type Constraint<T> = {
+    requirement: (value: T) => boolean
+    message: string
 }
 
 export type AllowedTypes = boolean | number | string
@@ -20,6 +28,7 @@ export abstract class Preference<T extends AllowedTypes> {
     readonly default: T;
     readonly label: string;
     readonly description: string;
+    readonly constraints: Constraint<T>[];
     readonly extras: { readonly [key: string]: any };
 
     constructor(data: PreferenceData<T>) {
@@ -31,6 +40,7 @@ export abstract class Preference<T extends AllowedTypes> {
         this.default = data.default;
         this.label = data.label;
         this.description = data.description;
+        this.constraints = fromMaybe([], data.constraints);
         this.extras = data.extras || {};
         if (!this.isValidValue(data, data.default)) {
             this.invalidValue(data.default);
@@ -39,7 +49,9 @@ export abstract class Preference<T extends AllowedTypes> {
 
     // All type-correct values are valid by default; specialized preference types may need a more specific implementation:
     isValidValue(data: PreferenceData<T>, value: T): boolean {
-        return true;
+        return fromMaybe([], data.constraints).every(constraint =>
+            constraint.requirement(value)
+        );
     }
 
     // Identity function by default; specialized preference types may need a more specific implementation:

@@ -22,7 +22,7 @@ export abstract class RangePreference extends NumericPreference implements FromS
     }
 
     isValidValue(data: RangePreferenceData, value: number): boolean {
-        return value >= data.min && value <= data.max;
+        return super.isValidValue(data, value) && value >= data.min && value <= data.max;
     }
 
     fromInvalid(value: number): number {

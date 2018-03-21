@@ -23,6 +23,8 @@ export class StringPreference extends Preference<string> implements FromString<s
 
     isValidValue(data: StringPreferenceData, value: string): boolean {
         return (
+            super.isValidValue(data, value)
+            &&
             value.length <= fromMaybe(Infinity, data.maxLength)
             &&
             (data.multiline || !value.includes("\n"))
