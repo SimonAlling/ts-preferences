@@ -34,15 +34,16 @@ export type PreferencesInterface = {
     htmlMenu: (f: (ps: PreferencesObject) => HTMLElement) => HTMLElement
 }
 
-export const SIMPLE_RESPONSE_HANDLER = <T extends AllowedTypes>(s: RequestSummary<T>, p: PreferencesInterface) => s.response;
-
-const LS_INFIX: string = "-preference-";
+export function SIMPLE_RESPONSE_HANDLER<T extends AllowedTypes>(s: RequestSummary<T>, p: PreferencesInterface): Response<T> {
+    return s.response;
+}
 
 export function init(
     preferences: PreferencesObject,
     localStoragePrefix: string,
     responseHandler: ResponseHandler,
 ): PreferencesInterface {
+    const LS_INFIX: string = "-preference-";
     const PM = new PreferenceManager(preferences, localStoragePrefix + LS_INFIX);
     const thisInterface = { get, set, reset, resetAll, htmlMenu };
 
