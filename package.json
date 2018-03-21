@@ -29,6 +29,7 @@
   "scripts": {
     "build": "tsc -d -p ."
   },
+  "sideEffects": false,
   "dependencies": {
     "ts-storage": "^0.1.0",
     "ts-type-guards": "^0.2.2"
