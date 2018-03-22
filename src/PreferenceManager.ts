@@ -16,7 +16,7 @@ export type Response<T> = {
 }
 
 export interface PreferencesObject {
-    readonly [key: string]: Preference<any> | PreferenceGroup;
+    readonly [key: string]: Preference<any> | PreferenceGroup
 }
 
 export interface PreferenceGroup {

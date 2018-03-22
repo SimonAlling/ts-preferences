@@ -75,6 +75,6 @@ export abstract class Preference<T extends AllowedTypes> {
     }
 
     getType(): string {
-        return this.constructor["name"];
+        return this.constructor.name;
     }
 }

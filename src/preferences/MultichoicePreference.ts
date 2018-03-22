@@ -3,12 +3,12 @@ import { PreferenceData, Preference, AllowedTypes } from "./Preference";
 import { ValueOrError } from "../Utilities";
 
 export interface MultichoicePreferenceOption<T> {
-    value: T,
-    label: string,
+    value: T
+    label: string
 }
 
 export type MultichoicePreferenceData<T> = PreferenceData<T> & {
-    options: MultichoicePreferenceOption<T>[],
+    options: MultichoicePreferenceOption<T>[]
 }
 
 export class MultichoicePreference<T extends AllowedTypes> extends Preference<T> {
