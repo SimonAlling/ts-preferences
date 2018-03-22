@@ -1,5 +1,5 @@
-import { PreferenceData, Preference, ParseResult, FromString } from "./Preference";
-import { fromMaybe } from "../Utilities";
+import { PreferenceData, Preference, FromString, Constraint, prependConstraints } from "./Preference";
+import { fromMaybe, ValueOrError } from "../Utilities";
 
 export type StringPreferenceData = PreferenceData<string> & {
     multiline: boolean
@@ -12,23 +12,27 @@ export class StringPreference extends Preference<string> implements FromString<s
     readonly maxLength: number;
 
     constructor(data: StringPreferenceData) {
+        const maxLength = fromMaybe(Infinity, data.maxLength);
+        const CONSTRAINTS: Constraint<string>[] = [];
+        if (!data.multiline) {
+            CONSTRAINTS.push({
+                requirement: v => !v.includes("\n"),
+                message: v => `Line breaks are not allowed.`,
+            });
+        }
+        if (maxLength < Infinity) {
+            CONSTRAINTS.push({
+                requirement: v => v.length < maxLength,
+                message: v => `Max length ${maxLength} exceeded.`,
+            });
+        }
+        prependConstraints(CONSTRAINTS, data);
         super(data);
-        const maxLength = data.maxLength;
-        if (fromMaybe(Infinity, maxLength) < 0) {
-            throw new Error(`maxLength cannot be negative, but it was ${JSON.stringify(data.maxLength)} for ${this.getType()} '${data.key}'`);
+        if (maxLength < 0) {
+            throw new Error(`maxLength cannot be negative, but it was ${maxLength} for ${this.getType()} '${data.key}'`);
         }
         this.multiline = data.multiline;
-        this.maxLength = fromMaybe(Infinity, maxLength);
-    }
-
-    isValidValue(data: StringPreferenceData, value: string): boolean {
-        return (
-            super.isValidValue(data, value)
-            &&
-            value.length <= fromMaybe(Infinity, data.maxLength)
-            &&
-            (data.multiline || !value.includes("\n"))
-        );
+        this.maxLength = maxLength;
     }
 
     fromInvalid(s: string): string {
@@ -38,13 +42,7 @@ export class StringPreference extends Preference<string> implements FromString<s
             : truncated.replace(StringPreference.REGEX_LINE_BREAKS, " ");
     }
 
-    fromString(s: string): ParseResult<string> {
-        return (
-            s.length > this.maxLength ? `Max length ${this.maxLength} exceeded.`
-            :
-            !this.multiline && s.includes("\n") ? `Line breaks are not allowed.`
-            :
-            { value: s }
-        );
+    fromString(s: string): ValueOrError<string> {
+        return this.validate(s);
     }
 }

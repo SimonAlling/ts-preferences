@@ -1,4 +1,4 @@
-import { is, isLike } from "ts-type-guards";
+import { is, isLike, isString } from "ts-type-guards";
 import * as Storage from "ts-storage";
 import { assertUnreachable } from "./Utilities";
 import { Preference, AllowedTypes } from "./preferences/Preference";
@@ -65,7 +65,7 @@ export class PreferenceManager {
         if (!isLike(preference.default)(this.cache.get(preference))) {
             throw new Error(unknown(preference));
         }
-        if (!preference.isValidValue(preference.data, value)) {
+        if (isString(preference.validate(value))) {
             return {
                 status: Status.INVALID_VALUE,
                 value: value,

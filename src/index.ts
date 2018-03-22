@@ -6,7 +6,7 @@ import {
     Response,
     flatten,
 } from "./PreferenceManager";
-import { Preference, AllowedTypes } from "./preferences/Preference";
+import { Preference, AllowedTypes, FromString } from "./preferences/Preference";
 import { BooleanPreference } from "./preferences/BooleanPreference";
 import { NumericPreference } from "./preferences/NumericPreference";
 import { IntegerPreference } from "./preferences/IntegerPreference";
@@ -79,6 +79,7 @@ export function init(
 
 export {
     AllowedTypes,
+    FromString,
     Status,
     Response,
     PreferenceManager,
