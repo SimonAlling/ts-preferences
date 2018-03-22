@@ -12,7 +12,6 @@ import { NumericPreference } from "./preferences/NumericPreference";
 import { IntegerPreference } from "./preferences/IntegerPreference";
 import { DoublePreference } from "./preferences/DoublePreference";
 import { StringPreference } from "./preferences/StringPreference";
-import { CustomPreference } from "./preferences/CustomPreference";
 import { RangePreference } from "./preferences/RangePreference";
 import { IntegerRangePreference } from "./preferences/IntegerRangePreference";
 import { DoubleRangePreference } from "./preferences/DoubleRangePreference";
@@ -91,7 +90,6 @@ export {
     IntegerPreference,
     DoublePreference,
     StringPreference,
-    CustomPreference,
     RangePreference,
     IntegerRangePreference,
     DoubleRangePreference,
