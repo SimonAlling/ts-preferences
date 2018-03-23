@@ -1,6 +1,6 @@
 import { isString } from "ts-type-guards";
 import { PreferenceData, Preference, AllowedTypes } from "./Preference";
-import { ValueOrError } from "../Utilities";
+import { ValueOrError, stringify } from "../Utilities";
 
 export interface MultichoicePreferenceOption<T> {
     value: T
@@ -25,10 +25,10 @@ export class MultichoicePreference<T extends AllowedTypes> extends Preference<T>
             const validationResult = super.validate(option.value);
             if (isString(validationResult)) {
                 // super is used above because we should not use the specialized validation, which checks if the value is in the list of options.
-                throw new Error(`Option value ${JSON.stringify(option.value)} (with label '${option.label}') in ${this.getType()} '${data.key}' is invalid. Reason: ${validationResult}`);
+                throw new Error(`Option value ${stringify(option.value)} (with label '${option.label}') in ${this.getType()} '${data.key}' is invalid. Reason: ${validationResult}`);
             }
             if (seenOptionValues.indexOf(option.value) > -1) {
-                throw new Error(`Multiple options with value ${JSON.stringify(option.value)} in ${this.getType()} '${data.key}'.`);
+                throw new Error(`Multiple options with value ${stringify(option.value)} in ${this.getType()} '${data.key}'.`);
             }
             seenOptionValues.push(option.value);
         });
@@ -38,7 +38,7 @@ export class MultichoicePreference<T extends AllowedTypes> extends Preference<T>
     validate(value: T): ValueOrError<T> {
         return (this.data as MultichoicePreferenceData<T>).options.some(option => option.value === value)
             ? { value: value }
-            : `${JSON.stringify(value)} is not among the available options.`;
+            : `${stringify(value)} is not among the available options.`;
     }
 
     fromInvalid(value: T): T {

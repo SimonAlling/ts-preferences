@@ -15,7 +15,7 @@ export class IntegerRangePreference extends RangePreference {
         prependConstraints(CONSTRAINTS, data);
         super(data);
         if (!Number.isInteger(data.min) || !Number.isInteger(data.max)) {
-            throw new TypeError(`min and max must be integers, but they were ${JSON.stringify(data.min)} and ${JSON.stringify(data.max)} for ${this.getType()} '${data.key}'.`);
+            throw new TypeError(`min and max must be integers, but they were ${data.min} and ${data.max} for ${this.getType()} '${data.key}'.`);
         }
     }
 

@@ -1,6 +1,6 @@
 import { is, isLike, isString } from "ts-type-guards";
 import * as Storage from "ts-storage";
-import { assertUnreachable } from "./Utilities";
+import { assertUnreachable, stringify } from "./Utilities";
 import { Preference, AllowedTypes } from "./preferences/Preference";
 
 export const enum Status {
@@ -26,7 +26,7 @@ export interface PreferenceGroup {
 }
 
 function unknown(p: Preference<any>): string {
-    return `Unknown preference. Please use only preferences from the object used to initialize the ${PreferenceManager.name}. This one is not among them:\n\n${JSON.stringify(p)}.`;
+    return `Unknown preference. Please use only preferences from the object used to initialize the ${PreferenceManager.name}. This one is not among them:\n\n${stringify(p)}.`;
 }
 
 export class PreferenceManager {
@@ -41,7 +41,7 @@ export class PreferenceManager {
         flatten(preferences).forEach(p => {
             const key = p.key;
             if (seenKeys.indexOf(key) > -1) {
-                throw new Error(`Duplicate preference key ${JSON.stringify(key)}.`);
+                throw new Error(`Duplicate preference key ${stringify(key)}.`);
             }
             this.cache.set(p, p.default);
             seenKeys.push(key);

@@ -1,5 +1,5 @@
 import { isString } from "ts-type-guards";
-import { fromMaybe, ValueOrError } from "../Utilities";
+import { fromMaybe, ValueOrError, stringify } from "../Utilities";
 
 export type PreferenceData<T> = {
     key: string
@@ -38,7 +38,7 @@ export abstract class Preference<T extends AllowedTypes> {
         data.constraints = fromMaybe([], data.constraints);
         data.extras = fromMaybe({}, data.extras);
         if (data.key === "") {
-            throw new TypeError(`A preference key cannot be the empty string, but this was the case for this preference data:\n${JSON.stringify(data)}`);
+            throw new TypeError(`A preference key cannot be the empty string, but this was the case for this preference data:\n${stringify(data)}`);
         }
         this.data = data;
         this.key = data.key;
@@ -71,7 +71,7 @@ export abstract class Preference<T extends AllowedTypes> {
     }
 
     invalidValue(value: T, message: string): void {
-        throw new Error(`${JSON.stringify(value)} is not a valid value for ${this.getType()} '${this.key}'. Reason: ${message}`);
+        throw new Error(`${stringify(value)} is not a valid value for ${this.getType()} '${this.key}'. Reason: ${message}`);
     }
 
     getType(): string {
