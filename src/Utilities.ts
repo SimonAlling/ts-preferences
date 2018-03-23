@@ -1,10 +1,12 @@
 export type ValueOrError<T> = { value: T } | string
 
+export type Maybe<A> = A | undefined;
+
 export function assertUnreachable(x: never): never {
     throw new Error("assertUnreachable: " + x);
 }
 
-export function fromMaybe<T>(fallback: T, x: T | undefined): T {
+export function fromMaybe<T>(fallback: T, x: Maybe<T>): T {
     return x === undefined ? fallback : x;
 }
 
