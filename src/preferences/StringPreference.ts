@@ -22,7 +22,7 @@ export class StringPreference extends Preference<string> implements FromString<s
         }
         if (maxLength < Infinity) {
             CONSTRAINTS.push({
-                requirement: v => v.length < maxLength,
+                requirement: v => v.length <= maxLength,
                 message: v => `Max length ${maxLength} exceeded.`,
             });
         }
