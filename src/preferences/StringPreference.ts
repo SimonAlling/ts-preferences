@@ -3,6 +3,7 @@ import { fromMaybe, ValueOrError } from "../Utilities";
 
 export type StringPreferenceData = PreferenceData<string> & {
     multiline: boolean
+    minLength?: number
     maxLength?: number
 }
 
@@ -12,12 +13,19 @@ export class StringPreference extends Preference<string> implements FromString<s
     readonly maxLength: number;
 
     constructor(data: StringPreferenceData) {
+        const minLength = fromMaybe(0, data.minLength);
         const maxLength = fromMaybe(Infinity, data.maxLength);
         const CONSTRAINTS: Constraint<string>[] = [];
         if (!data.multiline) {
             CONSTRAINTS.push({
                 requirement: v => !v.includes("\n"),
                 message: v => `Line breaks are not allowed.`,
+            });
+        }
+        if (minLength > 0) {
+            CONSTRAINTS.push({
+                requirement: v => v.length >= minLength,
+                message: v => `Minimum length is ${minLength} characters.`,
             });
         }
         if (maxLength < Infinity) {
