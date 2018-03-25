@@ -35,8 +35,6 @@
     "ts-type-guards": "^0.2.2"
   },
   "devDependencies": {
-    "ts-storage": "^0.1.0",
-    "ts-type-guards": "^0.2.2",
     "typescript": "^2.6.1"
   }
 }
