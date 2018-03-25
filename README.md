@@ -5,6 +5,18 @@
 [![Downloads Stats][npm-downloads]][npm-url]
 
 
+## Table of Contents
+
+1. [Installation](#installation)
+1. [Why?](#why)
+1. [Usage](#usage)
+    1. [Basic Example](#basic-example)
+    1. [The `P` Object](#the-p-object)
+    1. [Preference Groups](#preference-groups)
+    1. [Error Handling](#error-handling)
+    1. [HTML Menu Generation](#html-menu-generation)
+
+
 ## Installation
 
 ```sh
