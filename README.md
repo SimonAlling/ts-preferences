@@ -14,7 +14,9 @@ npm install ts-preferences --save
 
 ## Why should I use it?
 
-`ts-preferences` gives you an easy, safe way of defining and accessing preferences for your application, without a lot of boilerplate code. You can only set and get preferences that actually exist, so no more hassle with preference keys. And when requesting a preference value, you can always trust that you _will_ get something and that it will have the right type, even if something goes wrong with `localStorage`.
+`ts-preferences` gives you an easy, safe way of defining and accessing preferences for your application, without a lot of boilerplate code.
+You can only set and get preferences that actually exist, so no more hassle with preference keys.
+And when requesting a preference value, you can always trust that you _will_ get something and that it will have the right type, even if something goes wrong with `localStorage`.
 
 
 ## Usage
@@ -74,7 +76,9 @@ function upTo(max: number): number {
 
 ### The `PREFERENCES` object
 
-`get(p)`, `set(p, v)` and `reset(p)` work as expected if _and only if_ `p` is in the `PreferencesObject` given as the **first argument to `init`**. That is, you can use all preferences in `PREFERENCES`, _and only those_, when talking to `ts-preferences`. The following code compiles, **but crashes**:
+`get(p)`, `set(p, v)` and `reset(p)` work as expected if _and only if_ `p` is in the `PreferencesObject` given as the **first argument to `init`**.
+That is, you can use all preferences in `PREFERENCES`, _and only those_, when talking to `ts-preferences`.
+The following code compiles, **but crashes**:
 
 ```javascript
 import * as TSPreferences from "ts-preferences";
@@ -110,14 +114,18 @@ Preferences.set(forgedPreference, false); // throws exception
 
 (Note that, although `forgedPreference` and `PREFERENCES.foo` are identical, they are not _the same object_, which is what counts in this case.)
 
-You should only use members of your `PREFERENCES` object as input to `get`, `set` and `reset`. If your editor supports TypeScript, it will autocomplete available preferences for you when you type e.g. `Preferences.get(PREFERENCES._)`.
+You should only use members of your `PREFERENCES` object as input to `get`, `set` and `reset`.
+If your editor supports TypeScript, it will autocomplete available preferences for you when you type e.g. `Preferences.get(PREFERENCES._)`.
 
 You may of course give your `PREFERENCES` object any name you want.
 
 
 ### Error handling
 
-Things can go wrong when getting or setting preferences. For example, `localStorage` may not be accessible, or the string saved therein may not parse to a value of the expected type. To take care of these cases in a graceful way, define a **response handler** and give it as an argument to `init`. Here is an example:
+Things can go wrong when getting or setting preferences.
+For example, `localStorage` may not be accessible, or the string saved therein may not parse to a value of the expected type.
+To take care of these cases in a graceful way, define a **response handler** and give it as an argument to `init`.
+Here is an example:
 
 ```javascript
 import * as TSPreferences from "ts-preferences";
@@ -177,7 +185,8 @@ function assertUnreachable(x: never): never {
 
 (`assertUnreachable` is just a way to enforce exhaustiveness in the `switch` statement.)
 
-If you don't want to define a response handler, you can use `SIMPLE_RESPONSE_HANDLER`, which is exported by `ts-preferences`, e.g. `TSPreferences.SIMPLE_RESPONSE_HANDLER`. Note, however, that you will then get no indication whatsoever if something goes wrong (but you _will_ get valid preference values).
+If you don't want to define a response handler, you can use `SIMPLE_RESPONSE_HANDLER`, which is exported by `ts-preferences`, e.g. `TSPreferences.SIMPLE_RESPONSE_HANDLER`.
+Note, however, that you will then get no indication whatsoever if something goes wrong (but you _will_ get valid preference values).
 
 
 [npm-image]: https://img.shields.io/npm/v/ts-preferences.svg
