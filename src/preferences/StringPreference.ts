@@ -11,6 +11,7 @@ export class StringPreference extends Preference<string> implements FromString<s
     static REGEX_LINE_BREAKS = /\n+/g;
     readonly multiline: boolean;
     readonly maxLength: number;
+    readonly minLength: number;
 
     constructor(data: StringPreferenceData) {
         const minLength = fromMaybe(0, data.minLength);
@@ -41,6 +42,7 @@ export class StringPreference extends Preference<string> implements FromString<s
         }
         this.multiline = data.multiline;
         this.maxLength = maxLength;
+        this.minLength = minLength;
     }
 
     fromInvalid(s: string): string {
