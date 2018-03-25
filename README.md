@@ -246,6 +246,32 @@ If you don't want to define a response handler, you can use `SIMPLE_RESPONSE_HAN
 Note, however, that you will then get no indication whatsoever if something goes wrong (but you _will_ get valid preference values).
 
 
+### HTML menu generation
+
+To generate a preferences menu, you need a generator function that takes a `PreferencesObject` and returns an `HTMLElement`:
+
+```javascript
+const PREFERENCES = {
+    // ...
+};
+
+const Preferences = TSPreferences.init(
+    PREFERENCES,
+    "my-awesome-app",
+    TSPreferences.SIMPLE_RESPONSE_HANDLER,
+);
+
+function generator(ps: PreferencesObject): HTMLElement {
+    const form = document.createElement("form");
+    // Probably a lot of code here.
+    return form;
+}
+
+const menu = Preferences.htmlMenu(generator);
+document.body.appendChild(menu);
+```
+
+
 [npm-image]: https://img.shields.io/npm/v/ts-preferences.svg
 [npm-url]: https://npmjs.org/package/ts-preferences
 [npm-downloads]: https://img.shields.io/npm/dm/ts-preferences.svg
