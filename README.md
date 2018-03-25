@@ -15,6 +15,11 @@
     1. [Preference Groups](#preference-groups)
     1. [Error Handling](#error-handling)
     1. [HTML Menu Generation](#html-menu-generation)
+1. [API Reference](#api-reference)
+    1. [`Preference`](#preference)
+    1. [`StringPreference`](#stringpreference)
+    1. [`RangePreference`](#rangepreference)
+    1. [`MultichoicePreference`](#multichoicepreference)
 
 
 ## Installation
@@ -282,6 +287,84 @@ function generator(ps: PreferencesObject): HTMLElement {
 const menu = Preferences.htmlMenu(generator);
 document.body.appendChild(menu);
 ```
+
+
+## API Reference
+
+Every preference takes an argument of type `PreferenceData<T>`, which for the different preference types has the properties listed below.
+
+
+### `Preference`
+
+#### `key: string`
+
+Used for saving preference values to `localStorage`.
+Must be unique for every preference.
+
+#### `label: string`
+
+User-readable label to be displayed in a generated GUI.
+
+#### `description: string`
+
+User-readable description to be displayed in a generated GUI.
+
+#### `default: T`
+
+Default value for the preference.
+
+#### `constraints?: Constraint<T>[]`
+
+Optional list of constraints that preference values must satisfy, in addition to any constraints included in the preference class.
+Each constraint must be an object with these properties:
+
+  * `requirement: (value: T) => boolean` – the predicate that values must satisfy.
+  * `message: (value: T) => string` – an error message for when a value does not satisfy the predicate.
+
+#### `extras?: { readonly [key: string]: any }`
+
+Optional object that can be used for anything, for example styling a single preference.
+Should be used with great care because it has no type-safety at all.
+
+
+### `StringPreference`
+
+#### `multiline: boolean`
+
+Whether values may contain line breaks.
+
+#### `minLength?: number`
+
+Optional minimum length.
+Defaults to `0`.
+
+#### `maxLength?: number`
+
+Optional maximum length.
+Defaults to `Infinity`.
+
+
+### `RangePreference`
+
+#### `min: number`
+
+Minimum allowed value.
+
+#### `max: number`
+
+Maximum allowed value.
+
+
+### `MultichoicePreference`
+
+#### `options: MultichoicePreferenceOption<T>[]`
+
+A list of available options.
+Must contain at least two elements.
+Each element must have these properties:
+
+  * `label: string` – a user-readable label for the option.
+  * `value: T` – the value represented by the option.
 
 
 [npm-image]: https://img.shields.io/npm/v/ts-preferences.svg
