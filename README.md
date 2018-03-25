@@ -14,7 +14,7 @@ npm install ts-preferences --save
 
 ## Why should I use it?
 
-`ts-preferences` gives you an easy, safe way of defining and accessing preferences for your application, without a lot of boilerplate code. You can only set and get preferences that actually exist, so no more hassle with preference keys. And when requesting a preference value, you can always trust that you will get something and that it will have the right type, even if something goes wrong with `localStorage`.
+`ts-preferences` gives you an easy, safe way of defining and accessing preferences for your application, without a lot of boilerplate code. You can only set and get preferences that actually exist, so no more hassle with preference keys. And when requesting a preference value, you can always trust that you _will_ get something and that it will have the right type, even if something goes wrong with `localStorage`.
 
 
 ## Usage
@@ -27,7 +27,7 @@ This rather artificial example shows how preferences can be used with full type-
 import * as TSPreferences from "ts-preferences";
 import { BooleanPreference, NumericPreference } from "ts-preferences";
 
-const PREFERENCES = Object.freeze({
+const PREFERENCES = {
     replace_title: new BooleanPreference({
         key: "replace_title",
         label: "Replace title",
@@ -40,7 +40,7 @@ const PREFERENCES = Object.freeze({
         description: "Weird counter thingy",
         default: 0,
     }),
-});
+};
 
 // Initialize a preference manager:
 const Preferences = TSPreferences.init(
@@ -74,7 +74,7 @@ function upTo(max: number): number {
 
 ### The `PREFERENCES` object
 
-`get(p)`, `set(p, v)` and `reset(p)` works as expected if _and only if_ `p` is in the object given as the **first argument to `init`**. That is, you can use all preferences in the `PREFERENCES` object, _and only those_, when talking to `ts-preferences`. The following code compiles, **but crashes**:
+`get(p)`, `set(p, v)` and `reset(p)` work as expected if _and only if_ `p` is in the `PreferencesObject` given as the **first argument to `init`**. That is, you can use all preferences in `PREFERENCES`, _and only those_, when talking to `ts-preferences`. The following code compiles, **but crashes**:
 
 ```javascript
 import * as TSPreferences from "ts-preferences";
@@ -149,7 +149,7 @@ function responseHandler<T>(summary: RequestSummary<T>, preferences: Preferences
             }
             return response;
 
-        case Status.PARSE_FAILED:
+        case Status.JSON_ERROR:
             if (summary.action === "get") {
                 console.warn(`The value found in localStorage for preference '${summary.preference.key}' could not be parsed. Replacing it with ${JSON.stringify(response.value)}.`);
                 preferences.set(summary.preference, response.value);
