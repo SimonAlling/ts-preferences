@@ -25,7 +25,7 @@ export class MultichoicePreference<T extends AllowedTypes> extends Preference<T>
         prependConstraints(CONSTRAINTS, data);
         super(data);
         if (options.length < 2) {
-            throw new Error(`options must contain at least two elements, but this was not the case for ${this.asString()}.`);
+            throw new Error(`Parameter 'options' must contain at least two elements, but this was not the case for ${this.asString()}.`);
         }
         const seenOptionValues: T[] = [];
         options.forEach(option => {

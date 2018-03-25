@@ -32,13 +32,13 @@ export class StringPreference extends Preference<string> implements FromString<s
         if (maxLength < Infinity) {
             CONSTRAINTS.push({
                 requirement: v => v.length <= maxLength,
-                message: v => `Max length ${maxLength} exceeded.`,
+                message: v => `Maximum length ${maxLength} exceeded.`,
             });
         }
         prependConstraints(CONSTRAINTS, data);
         super(data);
-        if (maxLength < 0) {
-            throw new Error(`maxLength cannot be negative, but it was ${maxLength} for ${this.asString()}`);
+        if (minLength < 0 || maxLength < 0) {
+            throw new Error(`Parameters 'minLength' and 'maxLength' cannot be negative, but they were ${minLength} and ${maxLength}, respectively, for ${this.asString()}.`);
         }
         this.multiline = data.multiline;
         this.maxLength = maxLength;
