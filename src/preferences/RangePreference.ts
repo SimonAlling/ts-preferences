@@ -32,10 +32,10 @@ export abstract class RangePreference extends NumericPreference implements FromS
         prependConstraints(CONSTRAINTS, data);
         super(data);
         if (!Number.isFinite(min) || !Number.isFinite(max)) {
-            throw new Error(`min and max must be finite numbers, but they were ${min} and ${max}, respectively, for ${this.getType()} '${data.key}'.`);
+            throw new Error(`min and max must be finite numbers, but they were ${min} and ${max}, respectively, for ${this.asString()}.`);
         }
         if (min > max) {
-            throw new Error(`min cannot be greater than max, but they were ${min} and ${max}, respectively, for ${this.getType()} '${data.key}'.`);
+            throw new Error(`min cannot be greater than max, but they were ${min} and ${max}, respectively, for ${this.asString()}.`);
         }
         this.min = min;
         this.max = max;

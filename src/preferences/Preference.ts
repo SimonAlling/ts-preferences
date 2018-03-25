@@ -65,10 +65,14 @@ export abstract class Preference<T extends AllowedTypes> {
     }
 
     invalidValue(value: T, message: string): void {
-        throw new Error(`${stringify(value)} is not a valid value for ${this.getType()} '${this.key}'. Reason: ${message}`);
+        throw new Error(`${stringify(value)} is not a valid value for ${this.asString()}. Reason: ${message}`);
     }
 
     getType(): string {
         return this.constructor.name;
+    }
+
+    protected asString(): string {
+        return `${this.constructor.name} '${this.key}'`;
     }
 }

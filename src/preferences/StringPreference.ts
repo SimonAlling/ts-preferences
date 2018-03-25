@@ -38,7 +38,7 @@ export class StringPreference extends Preference<string> implements FromString<s
         prependConstraints(CONSTRAINTS, data);
         super(data);
         if (maxLength < 0) {
-            throw new Error(`maxLength cannot be negative, but it was ${maxLength} for ${this.getType()} '${data.key}'`);
+            throw new Error(`maxLength cannot be negative, but it was ${maxLength} for ${this.asString()}`);
         }
         this.multiline = data.multiline;
         this.maxLength = maxLength;
