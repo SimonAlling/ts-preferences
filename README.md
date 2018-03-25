@@ -123,8 +123,8 @@ const Preferences = TSPreferences.init(
     TSPreferences.SIMPLE_RESPONSE_HANDLER,
 );
 
-Preferences.get(P.foo);         // OK
-Preferences.set(P.foo, false);  // OK
+Preferences.get(P.foo);                   // OK
+Preferences.set(P.foo, false);            // OK
 Preferences.get(forgedPreference);        // throws exception
 Preferences.set(forgedPreference, false); // throws exception
 ```
