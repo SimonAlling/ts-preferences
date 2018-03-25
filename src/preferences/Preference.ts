@@ -26,7 +26,6 @@ export function prependConstraints<T>(cs: Constraint<T>[], data: PreferenceData<
 }
 
 export abstract class Preference<T extends AllowedTypes> {
-    readonly data: PreferenceData<T>;
     readonly key: string;
     readonly default: T;
     readonly label: string;
@@ -35,27 +34,21 @@ export abstract class Preference<T extends AllowedTypes> {
     readonly extras: { readonly [key: string]: any };
 
     constructor(data: PreferenceData<T>) {
-        data.description = fromMaybe("", data.description);
-        data.constraints = fromMaybe([], data.constraints);
-        data.extras = fromMaybe({}, data.extras);
         if (data.key === "") {
             throw new TypeError(`A preference key cannot be the empty string, but this was the case for this preference data:\n${stringify(data)}`);
         }
-        this.data = data;
         this.key = data.key;
         this.default = data.default;
         this.label = data.label;
-        this.description = data.description;
-        this.constraints = data.constraints;
-        this.extras = data.extras;
+        this.description = fromMaybe("", data.description);
+        this.constraints = fromMaybe([], data.constraints);
+        this.extras = fromMaybe({}, data.extras);
         const validationResult = this.validate(data.default);
         if (isString(validationResult)) {
             this.invalidValue(data.default, validationResult);
         }
     }
 
-    // All type-correct values satisfying the given constraints are valid by default.
-    // Specialized preference types may need a more specific implementation.
     validate(value: T): ValueOrError<T> {
         const constraints = this.constraints;
         for (let i = 0, len = constraints.length; i < len; i++) {
