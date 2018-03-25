@@ -29,7 +29,7 @@ This rather artificial example shows how preferences can be used with full type-
 import * as TSPreferences from "ts-preferences";
 import { BooleanPreference, NumericPreference } from "ts-preferences";
 
-const PREFERENCES = {
+const P = {
     replace_title: new BooleanPreference({
         key: "replace_title",
         label: "Replace title",
@@ -46,17 +46,17 @@ const PREFERENCES = {
 
 // Initialize a preference manager:
 const Preferences = TSPreferences.init(
-    PREFERENCES,
+    P,
     "my-awesome-app",
     TSPreferences.SIMPLE_RESPONSE_HANDLER,
 );
 
 // Replace title if corresponding preference is true:
-if (Preferences.get(PREFERENCES.replace_title)) {
+if (Preferences.get(P.replace_title)) {
     document.title = "top kek";
 }
 
-const counter = Preferences.get(PREFERENCES.counter);
+const counter = Preferences.get(P.counter);
 
 // Randomize background-color if saved counter value is a multiple of 5:
 if (counter % 5 === 0) {
@@ -64,7 +64,7 @@ if (counter % 5 === 0) {
 }
 
 // Save a new counter value:
-Preferences.set(PREFERENCES.counter, counter + 1);
+Preferences.set(P.counter, counter + 1);
 
 function upTo(max: number): number {
     return Math.round(Math.random() * max);
@@ -74,10 +74,10 @@ function upTo(max: number): number {
 (A preference which is automatically changed on every page load probably doesn't make too much sense beyond demonstration purposes.)
 
 
-### The `PREFERENCES` object
+### The `P` object
 
 `get(p)`, `set(p, v)` and `reset(p)` work as expected if _and only if_ `p` is in the `PreferencesObject` given as the **first argument to `init`**.
-That is, you can use all preferences in `PREFERENCES`, _and only those_, when talking to `ts-preferences`.
+That is, you can use all preferences in `P`, _and only those_, when talking to `ts-preferences`.
 The following code compiles, **but crashes**:
 
 ```javascript
@@ -91,7 +91,7 @@ const forgedPreference = new BooleanPreference({
     default: true,
 });
 
-const PREFERENCES = {
+const P = {
     foo: new BooleanPreference({
         key: "foo",
         label: "foo label",
@@ -101,23 +101,23 @@ const PREFERENCES = {
 };
 
 const Preferences = TSPreferences.init(
-    PREFERENCES,
+    P,
     "my-awesome-app",
     TSPreferences.SIMPLE_RESPONSE_HANDLER,
 );
 
-Preferences.get(PREFERENCES.foo);         // OK
-Preferences.set(PREFERENCES.foo, false);  // OK
+Preferences.get(P.foo);         // OK
+Preferences.set(P.foo, false);  // OK
 Preferences.get(forgedPreference);        // throws exception
 Preferences.set(forgedPreference, false); // throws exception
 ```
 
-(Note that, although `forgedPreference` and `PREFERENCES.foo` are identical, they are not _the same object_, which is what counts in this case.)
+(Note that, although `forgedPreference` and `P.foo` are identical, they are not _the same object_, which is what counts in this case.)
 
-You should only use members of your `PREFERENCES` object as input to `get`, `set` and `reset`.
-If your editor supports TypeScript, it will autocomplete available preferences for you when you type e.g. `Preferences.get(PREFERENCES._)`.
+You should only use members of your `P` object as input to `get`, `set` and `reset`.
+If your editor supports TypeScript, it will autocomplete available preferences for you when you type e.g. `Preferences.get(P._)`.
 
-You may of course give your `PREFERENCES` object any name you want.
+You may of course give your `P` object any name you want.
 
 
 ### Preference groups
@@ -131,7 +131,7 @@ A group is simply an object with these properties:
 An example of grouped preferences:
 
 ```javascript
-const PREFERENCES = {
+const P = {
     video: {
         label: "Video Settings",
         _: {
@@ -171,7 +171,7 @@ const PREFERENCES = {
 In this case, you might do something like this in your application:
 
 ```javascript
-if (Preferences.get(PREFERENCES.video._.vsync)) {
+if (Preferences.get(P.video._.vsync)) {
     // ...
 }
 ```
@@ -188,12 +188,12 @@ Here is an example:
 import * as TSPreferences from "ts-preferences";
 import { Status, Response, RequestSummary, PreferencesInterface } from "ts-preferences";
 
-const PREFERENCES = {
+const P = {
     // ...
 };
 
 const Preferences = TSPreferences.init(
-    PREFERENCES,
+    P,
     "my-awesome-app",
     responseHandler,
 );
@@ -251,12 +251,12 @@ Note, however, that you will then get no indication whatsoever if something goes
 To generate a preferences menu, you need a generator function that takes a `PreferencesObject` and returns an `HTMLElement`:
 
 ```javascript
-const PREFERENCES = {
+const P = {
     // ...
 };
 
 const Preferences = TSPreferences.init(
-    PREFERENCES,
+    P,
     "my-awesome-app",
     TSPreferences.SIMPLE_RESPONSE_HANDLER,
 );
