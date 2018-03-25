@@ -12,7 +12,7 @@ npm install ts-preferences --save
 ```
 
 
-## Why should I use it?
+## Why?
 
 `ts-preferences` gives you an easy, safe way of defining and accessing preferences for your application, without a lot of boilerplate code.
 You can only set and get preferences that actually exist, so no more hassle with preference keys.
@@ -21,7 +21,7 @@ And when requesting a preference value, you can always trust that you _will_ get
 
 ## Usage
 
-### Basic example
+### Basic Example
 
 This rather artificial example shows how preferences can be used with full type-safety:
 
@@ -74,7 +74,7 @@ function upTo(max: number): number {
 (A preference which is automatically changed on every page load probably doesn't make too much sense beyond demonstration purposes.)
 
 
-### The `P` object
+### The `P` Object
 
 `get(p)`, `set(p, v)` and `reset(p)` work as expected if _and only if_ `p` is in the `PreferencesObject` given as the **first argument to `init`**.
 That is, you can use all preferences in `P`, _and only those_, when talking to `ts-preferences`.
@@ -120,7 +120,7 @@ If your editor supports TypeScript, it will autocomplete available preferences f
 You may of course give your `P` object any name you want.
 
 
-### Preference groups
+### Preference Groups
 
 A `PreferencesObject` can contain not only preferences, but also **preference groups**.
 A group is simply an object with these properties:
@@ -177,7 +177,7 @@ if (Preferences.get(P.video._.vsync)) {
 ```
 
 
-### Error handling
+### Error Handling
 
 Things can go wrong when getting or setting preferences.
 For example, `localStorage` may not be accessible, or the string saved therein may not parse to a value of the expected type.
@@ -246,7 +246,7 @@ If you don't want to define a response handler, you can use `SIMPLE_RESPONSE_HAN
 Note, however, that you will then get no indication whatsoever if something goes wrong (but you _will_ get valid preference values).
 
 
-### HTML menu generation
+### HTML Menu Generation
 
 To generate a preferences menu, you need a generator function that takes a `PreferencesObject` and returns an `HTMLElement`:
 
