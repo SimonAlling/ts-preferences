@@ -120,6 +120,63 @@ If your editor supports TypeScript, it will autocomplete available preferences f
 You may of course give your `PREFERENCES` object any name you want.
 
 
+### Preference groups
+
+A `PreferencesObject` can contain not only preferences, but also **preference groups**.
+A group is simply an object with these properties:
+
+  * `label` – a label for the group.
+  * `_` – a `PreferencesObject` representing the group.
+
+An example of grouped preferences:
+
+```javascript
+const PREFERENCES = {
+    video: {
+        label: "Video Settings",
+        _: {
+            vsync: new BooleanPreference({
+                key: "video_vsync",
+                label: "V-Sync",
+                description: "Wait for vertical sync",
+                default: false,
+            }),
+            textures: new MultichoicePreference({
+                key: "video_textures",
+                label: "Texture Quality",
+                description: "Quality of textures",
+                default: 2,
+                options: [
+                    { value: 1, label: "Low", },
+                    { value: 2, label: "Medium", },
+                    { value: 3, label: "High", },
+                ],
+            }),
+        },
+    },
+    audio: {
+        label: "Audio Settings",
+        _: {
+            doppler: new BooleanPreference({
+                key: "audio_doppler",
+                label: "Doppler Effect",
+                description: "Enable the Doppler effect",
+                default: true,
+            }),
+        },
+    },
+};
+```
+
+In this case, you might do something like this in your application:
+
+```javascript
+if (Preferences.get(PREFERENCES.video._.vsync)) {
+    // ...
+}
+```
+
+
 ### Error handling
 
 Things can go wrong when getting or setting preferences.
