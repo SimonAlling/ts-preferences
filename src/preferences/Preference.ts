@@ -5,7 +5,7 @@ export type PreferenceData<T> = {
     key: string
     default: T
     label: string
-    description: string
+    description?: string
     constraints?: Constraint<T>[]
     extras?: { readonly [key: string]: any }
 }
@@ -35,6 +35,7 @@ export abstract class Preference<T extends AllowedTypes> {
     readonly extras: { readonly [key: string]: any };
 
     constructor(data: PreferenceData<T>) {
+        data.description = fromMaybe("", data.description);
         data.constraints = fromMaybe([], data.constraints);
         data.extras = fromMaybe({}, data.extras);
         if (data.key === "") {

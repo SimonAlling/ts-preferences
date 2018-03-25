@@ -50,14 +50,14 @@ const P = {
     replace_title: new BooleanPreference({
         key: "replace_title",
         label: "Replace title",
-        description: "Replace boring page title",
         default: true,
+        description: "Replace boring page title",
     }),
     counter: new NumericPreference({
         key: "counter",
         label: "Counter",
-        description: "Weird counter thingy",
         default: 0,
+        description: "Weird counter thingy",
     }),
 };
 
@@ -104,16 +104,16 @@ import { BooleanPreference } from "ts-preferences";
 const forgedPreference = new BooleanPreference({
     key: "foo",
     label: "foo label",
-    description: "foo description",
     default: true,
+    description: "foo description",
 });
 
 const P = {
     foo: new BooleanPreference({
         key: "foo",
         label: "foo label",
-        description: "foo description",
         default: true,
+        description: "foo description",
     }),
 };
 
@@ -155,19 +155,19 @@ const P = {
             vsync: new BooleanPreference({
                 key: "video_vsync",
                 label: "V-Sync",
-                description: "Wait for vertical sync",
                 default: false,
+                description: "Wait for vertical sync",
             }),
             textures: new MultichoicePreference({
                 key: "video_textures",
                 label: "Texture Quality",
-                description: "Quality of textures",
                 default: 2,
                 options: [
                     { value: 1, label: "Low", },
                     { value: 2, label: "Medium", },
                     { value: 3, label: "High", },
                 ],
+                description: "Quality of textures",
             }),
         },
     },
@@ -177,8 +177,8 @@ const P = {
             doppler: new BooleanPreference({
                 key: "audio_doppler",
                 label: "Doppler Effect",
-                description: "Enable the Doppler effect",
                 default: true,
+                description: "Enable the Doppler effect",
             }),
         },
     },
@@ -305,13 +305,14 @@ Must be unique for every preference.
 
 User-readable label to be displayed in a generated GUI.
 
-#### `description: string`
-
-User-readable description to be displayed in a generated GUI.
-
 #### `default: T`
 
 Default value for the preference.
+
+#### `description?: string`
+
+Optional user-readable description to be displayed in a generated GUI.
+Defaults to `""`.
 
 #### `constraints?: Constraint<T>[]`
 
