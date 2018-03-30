@@ -1,0 +1,24 @@
+{
+    "defaultSeverity": "error",
+    "extends": [
+        "tslint:recommended"
+    ],
+    "jsRules": {},
+    "rules": {
+        "arrow-parens": false,
+        "array-type": [ true, "array" ],
+        "ordered-imports": [
+            true,
+            {
+                "import-sources-order": "case-insensitive",
+                "named-imports-order": "lowercase-last",
+                "grouped-imports": true
+            }
+        ],
+        "object-literal-sort-keys": [true, "ignore-case", "match-declaration-order", "shorthand-first"],
+        "semicolon": [true, "always", "ignore-interfaces", "ignore-bound-class-methods"],
+        "max-line-length": false,
+        "interface-name": false
+    },
+    "rulesDirectory": []
+}

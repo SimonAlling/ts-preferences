@@ -30,6 +30,8 @@
     "dist/"
   ],
   "scripts": {
+    "lint": "tslint --project .",
+    "verify": "npm run build && npm run lint",
     "build": "tsc -d -p ."
   },
   "sideEffects": false,
@@ -38,6 +40,7 @@
     "ts-type-guards": "^0.2.2"
   },
   "devDependencies": {
+    "tslint": "^5.9.1",
     "typescript": "^2.6.1"
   }
 }

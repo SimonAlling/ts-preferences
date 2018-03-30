@@ -1,15 +1,17 @@
 import { isString } from "ts-type-guards";
-import { NumericPreference } from "./NumericPreference";
-import { DoublePreference } from "./DoublePreference";
-import { RangePreferenceData, RangePreference } from "./RangePreference";
+
 import { ValueOrError } from "../Utilities";
+
+import { DoublePreference } from "./DoublePreference";
+import { NumericPreference } from "./NumericPreference";
+import { RangePreference, RangePreferenceData } from "./RangePreference";
 
 export class DoubleRangePreference extends RangePreference {
     constructor(data: RangePreferenceData) {
         super(data);
     }
 
-    fromString(s: string): ValueOrError<number> {
+    public fromString(s: string): ValueOrError<number> {
         return NumericPreference.postParse(this, DoublePreference.parse(s));
     }
 }

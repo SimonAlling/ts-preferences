@@ -1,7 +1,12 @@
 import { isString } from "ts-type-guards";
-import { fromMaybe, ValueOrError, stringify } from "../Utilities";
 
-export type PreferenceData<T> = {
+import {
+    ValueOrError,
+    fromMaybe,
+    stringify,
+} from "../Utilities";
+
+export interface PreferenceData<T> {
     key: string
     default: T
     label: string
@@ -10,12 +15,12 @@ export type PreferenceData<T> = {
     extras?: { readonly [key: string]: any }
 }
 
-export type Constraint<T> = {
+export interface Constraint<T> {
     requirement: (value: T) => boolean
     message: (value: T) => string
 }
 
-export type AllowedTypes = boolean | number | string
+export type AllowedTypes = boolean | number | string;
 
 export interface FromString<T> {
     fromString: (s: string) => ValueOrError<T>
@@ -26,12 +31,12 @@ export function prependConstraints<T>(cs: Constraint<T>[], data: PreferenceData<
 }
 
 export abstract class Preference<T extends AllowedTypes> {
-    readonly key: string;
-    readonly default: T;
-    readonly label: string;
-    readonly description: string;
-    readonly constraints: Constraint<T>[];
-    readonly extras: { readonly [key: string]: any };
+    public readonly key: string;
+    public readonly default: T;
+    public readonly label: string;
+    public readonly description: string;
+    public readonly constraints: Constraint<T>[];
+    public readonly extras: { readonly [key: string]: any };
 
     constructor(data: PreferenceData<T>) {
         if (data.key === "") {
@@ -49,7 +54,7 @@ export abstract class Preference<T extends AllowedTypes> {
         }
     }
 
-    validate(value: T): ValueOrError<T> {
+    public validate(value: T): ValueOrError<T> {
         const constraints = this.constraints;
         for (let i = 0, len = constraints.length; i < len; i++) {
             const constraint = constraints[i];
@@ -57,22 +62,22 @@ export abstract class Preference<T extends AllowedTypes> {
                 return constraint.message(value);
             }
         }
-        return { value: value };
+        return { value };
     }
 
-    fromInvalid(value: T): T {
+    public fromInvalid(value: T): T {
         return this.default;
     }
 
-    invalidValue(value: T, message: string): void {
-        throw new Error(`${stringify(value)} is not a valid value for ${this.asString()}. Reason: ${message}`);
-    }
-
-    getType(): string {
+    public getType(): string {
         return this.constructor.name;
     }
 
     protected asString(): string {
         return `${this.constructor.name} '${this.key}'`;
+    }
+
+    private invalidValue(value: T, message: string): void {
+        throw new Error(`${stringify(value)} is not a valid value for ${this.asString()}. Reason: ${message}`);
     }
 }

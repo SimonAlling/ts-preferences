@@ -1,16 +1,22 @@
-import { PreferenceData, FromString, Constraint, prependConstraints } from "./Preference";
-import { NumericPreference } from "./NumericPreference";
-import { DoublePreference } from "./DoublePreference";
 import { ValueOrError } from "../Utilities";
 
-export type RangePreferenceData = PreferenceData<number> & {
+import { DoublePreference } from "./DoublePreference";
+import { NumericPreference } from "./NumericPreference";
+import {
+    Constraint,
+    FromString,
+    PreferenceData,
+    prependConstraints,
+} from "./Preference";
+
+export interface RangePreferenceData extends PreferenceData<number> {
     min: number
     max: number
 }
 
 export abstract class RangePreference extends NumericPreference implements FromString<number> {
-    readonly min: number;
-    readonly max: number;
+    public readonly min: number;
+    public readonly max: number;
 
     constructor(data: RangePreferenceData) {
         const min = data.min;
@@ -41,9 +47,9 @@ export abstract class RangePreference extends NumericPreference implements FromS
         this.max = max;
     }
 
-    fromInvalid(value: number): number {
+    public fromInvalid(value: number): number {
         return Math.max(this.min, Math.min(this.max, value));
     }
 
-    abstract fromString(s: string): ValueOrError<number>
+    public abstract fromString(s: string): ValueOrError<number>;
 }

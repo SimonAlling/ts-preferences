@@ -1,23 +1,28 @@
 import {
+    PreferenceGroup,
     PreferenceManager,
     PreferencesObject,
-    PreferenceGroup,
-    Status,
     Response,
+    Status,
     flatten,
 } from "./PreferenceManager";
-import { Preference, AllowedTypes, FromString } from "./preferences/Preference";
-import { BooleanPreference } from "./preferences/BooleanPreference";
-import { NumericPreference } from "./preferences/NumericPreference";
-import { IntegerPreference } from "./preferences/IntegerPreference";
-import { DoublePreference } from "./preferences/DoublePreference";
-import { StringPreference } from "./preferences/StringPreference";
-import { RangePreference } from "./preferences/RangePreference";
-import { IntegerRangePreference } from "./preferences/IntegerRangePreference";
-import { DoubleRangePreference } from "./preferences/DoubleRangePreference";
-import { MultichoicePreference } from "./preferences/MultichoicePreference";
+import {
+    AllowedTypes,
+    FromString,
+    Preference,
+} from "./preferences/Preference";
 
-export type RequestSummary<T extends AllowedTypes> = {
+import { BooleanPreference } from "./preferences/BooleanPreference";
+import { DoublePreference } from "./preferences/DoublePreference";
+import { DoubleRangePreference } from "./preferences/DoubleRangePreference";
+import { IntegerPreference } from "./preferences/IntegerPreference";
+import { IntegerRangePreference } from "./preferences/IntegerRangePreference";
+import { MultichoicePreference } from "./preferences/MultichoicePreference";
+import { NumericPreference } from "./preferences/NumericPreference";
+import { RangePreference } from "./preferences/RangePreference";
+import { StringPreference } from "./preferences/StringPreference";
+
+export interface RequestSummary<T extends AllowedTypes> {
     action: "set" | "get"
     preference: Preference<T>
     response: Response<T>
@@ -25,7 +30,7 @@ export type RequestSummary<T extends AllowedTypes> = {
 
 export type ResponseHandler = <T extends AllowedTypes>(s: RequestSummary<T>, p: PreferencesInterface) => Response<T>;
 
-export type PreferencesInterface = {
+export interface PreferencesInterface {
     get: <T extends AllowedTypes>(p: Preference<T>) => T
     set: <T extends AllowedTypes>(p: Preference<T>, v: T) => void
     reset: <T extends AllowedTypes>(p: Preference<T>) => void
@@ -87,12 +92,12 @@ export {
     PreferenceGroup,
     Preference,
     BooleanPreference,
-    NumericPreference,
-    IntegerPreference,
     DoublePreference,
-    StringPreference,
-    RangePreference,
-    IntegerRangePreference,
     DoubleRangePreference,
+    IntegerPreference,
+    IntegerRangePreference,
     MultichoicePreference,
+    NumericPreference,
+    RangePreference,
+    StringPreference,
 };

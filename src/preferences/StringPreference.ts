@@ -1,17 +1,24 @@
-import { PreferenceData, Preference, FromString, Constraint, prependConstraints } from "./Preference";
-import { fromMaybe, ValueOrError } from "../Utilities";
+import { ValueOrError, fromMaybe } from "../Utilities";
 
-export type StringPreferenceData = PreferenceData<string> & {
+import {
+    Constraint,
+    FromString,
+    Preference,
+    PreferenceData,
+    prependConstraints,
+} from "./Preference";
+
+export interface StringPreferenceData extends PreferenceData<string> {
     multiline: boolean
     minLength?: number
     maxLength?: number
 }
 
 export class StringPreference extends Preference<string> implements FromString<string> {
-    static REGEX_LINE_BREAKS = /\n+/g;
-    readonly multiline: boolean;
-    readonly maxLength: number;
-    readonly minLength: number;
+    protected static REGEX_LINE_BREAKS = /\n+/g;
+    public readonly multiline: boolean;
+    public readonly maxLength: number;
+    public readonly minLength: number;
 
     constructor(data: StringPreferenceData) {
         const minLength = fromMaybe(0, data.minLength);
@@ -45,14 +52,14 @@ export class StringPreference extends Preference<string> implements FromString<s
         this.minLength = minLength;
     }
 
-    fromInvalid(s: string): string {
+    public fromInvalid(s: string): string {
         const truncated = s.substring(0, this.maxLength);
         return this.multiline
             ? truncated
             : truncated.replace(StringPreference.REGEX_LINE_BREAKS, " ");
     }
 
-    fromString(s: string): ValueOrError<string> {
+    public fromString(s: string): ValueOrError<string> {
         return this.validate(s);
     }
 }

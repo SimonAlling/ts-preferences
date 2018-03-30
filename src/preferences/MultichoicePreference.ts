@@ -1,18 +1,29 @@
 import { isString } from "ts-type-guards";
-import { PreferenceData, Preference, AllowedTypes, Constraint, prependConstraints } from "./Preference";
-import { ValueOrError, stringify } from "../Utilities";
+
+import {
+    ValueOrError,
+    stringify,
+} from "../Utilities";
+
+import {
+    AllowedTypes,
+    Constraint,
+    Preference,
+    PreferenceData,
+    prependConstraints,
+} from "./Preference";
 
 export interface MultichoicePreferenceOption<T> {
     value: T
     label: string
 }
 
-export type MultichoicePreferenceData<T> = PreferenceData<T> & {
+export interface MultichoicePreferenceData<T> extends PreferenceData<T> {
     options: MultichoicePreferenceOption<T>[]
 }
 
 export class MultichoicePreference<T extends AllowedTypes> extends Preference<T> {
-    readonly options: MultichoicePreferenceOption<T>[];
+    public readonly options: MultichoicePreferenceOption<T>[];
 
     constructor(data: MultichoicePreferenceData<T>) {
         const options = data.options;
@@ -43,7 +54,7 @@ export class MultichoicePreference<T extends AllowedTypes> extends Preference<T>
         this.options = options;
     }
 
-    fromInvalid(value: T): T {
+    public fromInvalid(value: T): T {
         return this.default;
     }
 }

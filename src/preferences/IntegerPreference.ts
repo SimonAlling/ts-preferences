@@ -1,8 +1,20 @@
-import { PreferenceData, Constraint, prependConstraints } from "./Preference";
-import { NumericPreference } from "./NumericPreference";
 import { ValueOrError } from "../Utilities";
 
+import { NumericPreference } from "./NumericPreference";
+import {
+    Constraint,
+    PreferenceData,
+    prependConstraints,
+} from "./Preference";
+
 export class IntegerPreference extends NumericPreference {
+    public static parse(s: string): ValueOrError<number> {
+        const parsed = parseInt(s, 10);
+        return Number.isNaN(parsed)
+            ? `"${s}" is not an integer.`
+            : { value: parsed };
+    }
+
     constructor(data: PreferenceData<number>) {
         const CONSTRAINTS: Constraint<number>[] = [
             {
@@ -14,14 +26,7 @@ export class IntegerPreference extends NumericPreference {
         super(data);
     }
 
-    static parse(s: string): ValueOrError<number> {
-        const parsed = parseInt(s, 10);
-        return Number.isNaN(parsed)
-            ? `"${s}" is not an integer.`
-            : { value: parsed };
-    }
-
-    fromString(s: string): ValueOrError<number> {
+    public fromString(s: string): ValueOrError<number> {
         return NumericPreference.postParse(this, IntegerPreference.parse(s));
     }
 }

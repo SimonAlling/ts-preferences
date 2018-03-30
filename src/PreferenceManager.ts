@@ -1,7 +1,18 @@
-import { is, isLike, isString } from "ts-type-guards";
 import * as Storage from "ts-storage";
-import { assertUnreachable, stringify } from "./Utilities";
-import { Preference, AllowedTypes } from "./preferences/Preference";
+import {
+    is,
+    isLike,
+    isString,
+} from "ts-type-guards";
+
+import {
+    AllowedTypes,
+    Preference,
+} from "./preferences/Preference";
+import {
+    assertUnreachable,
+    stringify,
+} from "./Utilities";
 
 export const enum Status {
     OK,
@@ -10,7 +21,7 @@ export const enum Status {
     LOCALSTORAGE_ERROR,
 }
 
-export type Response<T> = {
+export interface Response<T> {
     status: Status
     value: T
 }
@@ -36,7 +47,7 @@ export class PreferenceManager {
     constructor(preferences: PreferencesObject, localStoragePrefix: string) {
         this.LS_PREFIX = localStoragePrefix;
         this.cache = new Map();
-        let seenKeys: string[] = [];
+        const seenKeys: string[] = [];
 
         flatten(preferences).forEach(p => {
             const key = p.key;
@@ -68,7 +79,7 @@ export class PreferenceManager {
         if (isString(preference.validate(value))) {
             return {
                 status: Status.INVALID_VALUE,
-                value: value,
+                value,
             };
         }
         this.cache.set(preference, value);
@@ -83,9 +94,9 @@ export class PreferenceManager {
 export function flatten(tree: PreferencesObject): Preference<any>[] {
     return Object.keys(tree).map(k => tree[k]).reduce(
         (acc, node) => acc.concat(
-            is(Preference)(node) ? node : flatten(node._)
+            is(Preference)(node) ? node : flatten(node._),
         ),
-        [] as Preference<any>[]
+        [] as Preference<any>[],
     );
 }
 

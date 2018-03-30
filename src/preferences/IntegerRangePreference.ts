@@ -1,8 +1,9 @@
-import { Constraint, prependConstraints } from "./Preference";
-import { NumericPreference } from "./NumericPreference";
-import { IntegerPreference } from "./IntegerPreference";
-import { RangePreferenceData, RangePreference } from "./RangePreference";
 import { ValueOrError } from "../Utilities";
+
+import { IntegerPreference } from "./IntegerPreference";
+import { NumericPreference } from "./NumericPreference";
+import { Constraint, prependConstraints } from "./Preference";
+import { RangePreference, RangePreferenceData } from "./RangePreference";
 
 export class IntegerRangePreference extends RangePreference {
     constructor(data: RangePreferenceData) {
@@ -19,11 +20,11 @@ export class IntegerRangePreference extends RangePreference {
         }
     }
 
-    fromInvalid(value: number): number {
+    public fromInvalid(value: number): number {
         return super.fromInvalid(Math.round(value));
     }
 
-    fromString(s: string): ValueOrError<number> {
+    public fromString(s: string): ValueOrError<number> {
         return NumericPreference.postParse(this, IntegerPreference.parse(s));
     }
 }

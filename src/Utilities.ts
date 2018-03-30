@@ -1,4 +1,4 @@
-export type ValueOrError<T> = { value: T } | string
+export type ValueOrError<T> = { value: T } | string;
 
 export type Maybe<A> = A | undefined;
 
