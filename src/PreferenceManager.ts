@@ -48,14 +48,24 @@ export class PreferenceManager {
         this.LS_PREFIX = localStoragePrefix;
         this.cache = new Map();
         const seenKeys: string[] = [];
+        const allPreferences = flatten(preferences);
 
-        flatten(preferences).forEach(p => {
+        allPreferences.forEach(p => {
             const key = p.key;
             if (seenKeys.indexOf(key) > -1) {
                 throw new Error(`Duplicate preference key ${stringify(key)}.`);
             }
             this.cache.set(p, p.default);
             seenKeys.push(key);
+        });
+
+        // Must be done after all preferences have been added to the cache:
+        allPreferences.forEach(p => {
+            p.dependencies.forEach(dependency => {
+                if (this.cache.get(dependency.preference) === undefined) {
+                    throw new Error(`Dependency error in preference ${stringify(p.key)}: ${unknown(dependency.preference)}`);
+                }
+            });
         });
     }
 

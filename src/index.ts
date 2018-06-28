@@ -35,6 +35,7 @@ export interface PreferencesInterface {
     set: <T extends AllowedTypes>(p: Preference<T>, v: T) => void
     reset: <T extends AllowedTypes>(p: Preference<T>) => void
     resetAll: () => void
+    enabled: <T extends AllowedTypes>(p: Preference<T>) => boolean
     htmlMenu: (f: (ps: PreferencesObject) => HTMLElement) => HTMLElement
 }
 
@@ -49,7 +50,7 @@ export function init(
 ): PreferencesInterface {
     const LS_INFIX: string = "-preference-";
     const PM = new PreferenceManager(preferences, localStoragePrefix + LS_INFIX);
-    const thisInterface = { get, set, reset, resetAll, htmlMenu };
+    const thisInterface = { get, set, reset, resetAll, enabled, htmlMenu };
 
     function get<T extends AllowedTypes>(p: Preference<T>): T {
         return responseHandler({
@@ -73,6 +74,10 @@ export function init(
 
     function resetAll(): void {
         flatten(preferences).forEach(reset);
+    }
+
+    function enabled<T extends AllowedTypes>(p: Preference<T>): boolean {
+        return p.dependencies.every(d => d.condition(get(d.preference)));
     }
 
     function htmlMenu(f: (ps: PreferencesObject) => HTMLElement): HTMLElement {

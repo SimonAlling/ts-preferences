@@ -12,12 +12,18 @@ export interface PreferenceData<T> {
     label: string
     description?: string
     constraints?: Constraint<T>[]
+    dependencies?: Dependency<any>[]
     extras?: { readonly [key: string]: any }
 }
 
 export interface Constraint<T> {
     requirement: (value: T) => boolean
     message: (value: T) => string
+}
+
+export interface Dependency<T extends AllowedTypes> {
+    preference: Preference<T>
+    condition: (value: T) => boolean
 }
 
 export type AllowedTypes = boolean | number | string;
@@ -36,6 +42,7 @@ export abstract class Preference<T extends AllowedTypes> {
     public readonly label: string;
     public readonly description: string;
     public readonly constraints: Constraint<T>[];
+    public readonly dependencies: Dependency<any>[];
     public readonly extras: { readonly [key: string]: any };
 
     constructor(data: PreferenceData<T>) {
@@ -47,6 +54,7 @@ export abstract class Preference<T extends AllowedTypes> {
         this.label = data.label;
         this.description = fromMaybe("", data.description);
         this.constraints = fromMaybe([], data.constraints);
+        this.dependencies = fromMaybe([], data.dependencies);
         this.extras = fromMaybe({}, data.extras);
         const validationResult = this.validate(data.default);
         if (isString(validationResult)) {
