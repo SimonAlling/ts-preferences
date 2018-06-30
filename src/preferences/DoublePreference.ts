@@ -1,6 +1,4 @@
-import {
-    ValueOrError,
-} from "../Utilities";
+import { ValueOrError } from "../Utilities";
 
 import { NumericPreference } from "./NumericPreference";
 import {
