@@ -5,7 +5,6 @@ import { ValueOrError } from "../Utilities";
 import {
     FromString,
     Preference,
-    PreferenceData,
 } from "./Preference";
 
 export abstract class NumericPreference extends Preference<number> implements FromString<number> {
@@ -13,10 +12,6 @@ export abstract class NumericPreference extends Preference<number> implements Fr
         return isString(parsed)
             ? parsed
             : p.validate(parsed.value);
-    }
-
-    constructor(data: PreferenceData<number>) {
-        super(data);
     }
 
     public abstract fromString(s: string): ValueOrError<number>;
