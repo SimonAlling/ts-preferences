@@ -73,8 +73,8 @@ export abstract class Preference<T extends AllowedTypes> {
         return { value };
     }
 
-    public fromInvalid(value: T): T {
-        return this.default;
+    public toValid(value: T): T {
+        return isString(this.validate(value)) ? this.default : value;
     }
 
     public getType(): string {

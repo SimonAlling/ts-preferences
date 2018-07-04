@@ -54,7 +54,7 @@ export class MultichoicePreference<T extends AllowedTypes> extends Preference<T>
         this.options = options;
     }
 
-    public fromInvalid(value: T): T {
+    public toValid(value: T): T {
         return this.default;
     }
 }

@@ -17,8 +17,8 @@ export class IntegerRangePreference extends RangePreference {
         }
     }
 
-    public fromInvalid(value: number): number {
-        return super.fromInvalid(Math.round(value));
+    public toValid(value: number): number {
+        return super.toValid(Math.round(value));
     }
 
     public fromString(s: string): ValueOrError<number> {

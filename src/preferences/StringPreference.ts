@@ -55,11 +55,13 @@ export class StringPreference extends Preference<string> implements FromString<s
         this.minLength = minLength;
     }
 
-    public fromInvalid(s: string): string {
+    public toValid(s: string): string {
         const truncated = s.substring(0, this.maxLength);
-        return this.multiline
+        return super.toValid(
+            this.multiline
             ? truncated
-            : truncated.replace(StringPreference.REGEX_LINE_BREAKS, " ");
+            : truncated.replace(StringPreference.REGEX_LINE_BREAKS, " ")
+        );
     }
 
     public fromString(s: string): ValueOrError<string> {

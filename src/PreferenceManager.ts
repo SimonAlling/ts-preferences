@@ -80,7 +80,7 @@ export class PreferenceManager {
             const validationResult = preference.validate(resp.value);
             return isString(validationResult) ? {
                 status: Status.INVALID_VALUE,
-                value: preference.fromInvalid(resp.value),
+                value: preference.toValid(resp.value),
             } : {
                 status: Status.OK,
                 value: resp.value,

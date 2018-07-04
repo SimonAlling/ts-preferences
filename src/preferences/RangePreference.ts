@@ -46,8 +46,8 @@ export abstract class RangePreference extends NumericPreference implements FromS
         this.max = max;
     }
 
-    public fromInvalid(value: number): number {
-        return Math.max(this.min, Math.min(this.max, value));
+    public toValid(value: number): number {
+        return super.toValid(Math.max(this.min, Math.min(this.max, value)));
     }
 
     public abstract fromString(s: string): ValueOrError<number>;

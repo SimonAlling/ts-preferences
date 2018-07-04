@@ -29,6 +29,10 @@ export class IntegerPreference extends NumericPreference {
         super(data);
     }
 
+    public toValid(value: number): number {
+        return super.toValid(Math.round(value));
+    }
+
     public fromString(s: string): ValueOrError<number> {
         return NumericPreference.postParse(this, IntegerPreference.parse(s));
     }
