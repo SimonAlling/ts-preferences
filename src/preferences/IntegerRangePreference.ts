@@ -8,14 +8,11 @@ import { RangePreference, RangePreferenceData } from "./RangePreference";
 export class IntegerRangePreference extends RangePreference {
     constructor(data: RangePreferenceData) {
         const CONSTRAINTS: Constraint<number>[] = [
-            {
-                requirement: Number.isInteger,
-                message: v => `${v} is not an integer.`,
-            },
+            IntegerPreference.CONSTRAINT_INTEGER,
         ];
         prependConstraints(CONSTRAINTS, data);
         super(data);
-        if (!Number.isInteger(data.min) || !Number.isInteger(data.max)) {
+        if (!IntegerPreference.isInteger(data.min) || !IntegerPreference.isInteger(data.max)) {
             throw new TypeError(`Parameters 'min' and 'max' must be integers, but they were ${data.min} and ${data.max} for ${this.asString()}.`);
         }
     }

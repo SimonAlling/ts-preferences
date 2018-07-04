@@ -1,6 +1,6 @@
 import { ValueOrError } from "../Utilities";
 
-import { NumericPreference } from "./NumericPreference";
+import { NumericPreference, NumericPreferenceData } from "./NumericPreference";
 import {
     Constraint,
     PreferenceData,
@@ -8,6 +8,12 @@ import {
 } from "./Preference";
 
 export class IntegerPreference extends NumericPreference {
+    public static readonly isInteger: (v: number) => boolean = v => Number.isInteger(v) || Math.abs(v) === Infinity;
+    public static readonly CONSTRAINT_INTEGER: Constraint<number> = {
+        requirement: IntegerPreference.isInteger,
+        message: v => `${v} is not an integer.`,
+    };
+
     public static parse(s: string): ValueOrError<number> {
         const parsed = parseInt(s, 10);
         return Number.isNaN(parsed)
@@ -15,12 +21,9 @@ export class IntegerPreference extends NumericPreference {
             : { value: parsed };
     }
 
-    constructor(data: PreferenceData<number>) {
+    constructor(data: NumericPreferenceData) {
         const CONSTRAINTS: Constraint<number>[] = [
-            {
-                requirement: Number.isInteger,
-                message: v => `${v} is not an integer.`,
-            },
+            IntegerPreference.CONSTRAINT_INTEGER,
         ];
         prependConstraints(CONSTRAINTS, data);
         super(data);

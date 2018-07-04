@@ -17,6 +17,7 @@
     1. [HTML Menu Generation](#html-menu-generation)
 1. [API Reference](#api-reference)
     1. [`Preference`](#preference)
+    1. [`NumericPreference`](#numericpreference)
     1. [`StringPreference`](#stringpreference)
     1. [`RangePreference`](#rangepreference)
     1. [`MultichoicePreference`](#multichoicepreference)
@@ -326,6 +327,13 @@ Each constraint must be an object with these properties:
 
 Optional object that can be used for anything, for example styling a single preference.
 Should be used with great care because it has no type-safety at all.
+
+
+### `NumericPreference`
+
+#### `infinite?: boolean`
+
+Whether `-Infinity` and `Infinity` should be valid values.
 
 
 ### `StringPreference`

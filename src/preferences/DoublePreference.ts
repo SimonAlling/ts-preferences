@@ -15,17 +15,6 @@ export class DoublePreference extends NumericPreference {
             : { value: parsed };
     }
 
-    constructor(data: PreferenceData<number>) {
-        const CONSTRAINTS: Constraint<number>[] = [
-            {
-                requirement: Number.isFinite,
-                message: v => `${v} is not a finite number.`,
-            },
-        ];
-        prependConstraints(CONSTRAINTS, data);
-        super(data);
-    }
-
     public fromString(s: string): ValueOrError<number> {
         return NumericPreference.postParse(this, DoublePreference.parse(s));
     }
