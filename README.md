@@ -224,11 +224,19 @@ function responseHandler<T>(summary: RequestSummary<T>, preferences: Preferences
 
         case Status.INVALID_VALUE:
             if (summary.action === "get") {
-                console.warn(`The value found in localStorage for preference '${summary.preference.key}' was invalid. Replacing it with ${JSON.stringify(response.value)}.`);
+                // response.saved is defined if and only if action is "get" and status is INVALID_VALUE:
+                console.warn(`The value found in localStorage for preference '${summary.preference.key}' (${JSON.stringify(response.saved)}) was invalid. Replacing it with ${JSON.stringify(response.value)}.`);
                 preferences.set(summary.preference, response.value);
             }
             if (summary.action === "set") {
                 console.warn(`Could not set value ${JSON.stringify(response.value)} for preference '${summary.preference.key}' because it was invalid.`);
+            }
+            return response;
+
+        case Status.TYPE_ERROR:
+            if (summary.action === "get") {
+                console.warn(`The value found in localStorage for preference '${summary.preference.key}' was not a ${typeof summary.preference.default}. Replacing it with ${JSON.stringify(response.value)}.`);
+                preferences.set(summary.preference, response.value);
             }
             return response;
 

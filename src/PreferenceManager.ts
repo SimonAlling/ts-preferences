@@ -17,6 +17,7 @@ import {
 export const enum Status {
     OK,
     INVALID_VALUE,
+    TYPE_ERROR,
     JSON_ERROR,
     LOCALSTORAGE_ERROR,
 }
@@ -24,6 +25,7 @@ export const enum Status {
 export interface Response<T> {
     status: Status
     value: T
+    saved?: T
 }
 
 export interface PreferencesObject {
@@ -81,6 +83,7 @@ export class PreferenceManager {
             return isString(validationResult) ? {
                 status: Status.INVALID_VALUE,
                 value: preference.toValid(resp.value),
+                saved: resp.value,
             } : {
                 status: Status.OK,
                 value: resp.value,
@@ -124,7 +127,7 @@ function fromStorageStatus(s: Storage.Status): Status {
     switch (s) {
         case Storage.Status.OK:                 return Status.OK;
         case Storage.Status.ABSENT:             return Status.OK;
-        case Storage.Status.TYPE_ERROR:         return Status.INVALID_VALUE;
+        case Storage.Status.TYPE_ERROR:         return Status.TYPE_ERROR;
         case Storage.Status.JSON_ERROR:         return Status.JSON_ERROR;
         case Storage.Status.LOCALSTORAGE_ERROR: return Status.LOCALSTORAGE_ERROR;
     }
