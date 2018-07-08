@@ -45,7 +45,7 @@ This rather artificial example shows how preferences can be used with full type-
 
 ```javascript
 import * as TSPreferences from "ts-preferences";
-import { BooleanPreference, NumericPreference } from "ts-preferences";
+import { BooleanPreference, IntegerPreference } from "ts-preferences";
 
 const P = {
     replace_title: new BooleanPreference({
@@ -54,7 +54,7 @@ const P = {
         default: true,
         description: "Replace boring page title",
     }),
-    counter: new NumericPreference({
+    counter: new IntegerPreference({
         key: "counter",
         label: "Counter",
         default: 0,
