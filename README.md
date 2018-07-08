@@ -106,7 +106,6 @@ const forgedPreference = new BooleanPreference({
     key: "foo",
     label: "foo label",
     default: true,
-    description: "foo description",
 });
 
 const P = {
@@ -114,7 +113,6 @@ const P = {
         key: "foo",
         label: "foo label",
         default: true,
-        description: "foo description",
     }),
 };
 
@@ -159,7 +157,6 @@ const P = {
                 key: "video_vsync",
                 label: "V-Sync",
                 default: false,
-                description: "Wait for vertical sync",
             }),
             textures: new MultichoicePreference({
                 key: "video_textures",
@@ -170,7 +167,6 @@ const P = {
                     { value: 2, label: "Medium", },
                     { value: 3, label: "High", },
                 ],
-                description: "Quality of textures",
             }),
         },
     },
@@ -181,7 +177,6 @@ const P = {
                 key: "audio_doppler",
                 label: "Doppler Effect",
                 default: true,
-                description: "Enable the Doppler effect",
             }),
         },
     },
