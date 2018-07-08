@@ -7,6 +7,7 @@ import {
 
 import {
     AllowedTypes,
+    Dependency,
     Preference,
 } from "./preferences/Preference";
 import {
@@ -35,6 +36,7 @@ export interface PreferencesObject {
 export interface PreferenceGroup {
     readonly label: string
     readonly _: PreferencesObject
+    readonly dependencies?: Dependency<any>[]
     readonly extras?: { readonly [key: string]: any }
 }
 
