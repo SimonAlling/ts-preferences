@@ -145,6 +145,8 @@ A group is simply an object with these properties:
 
   * `label` – a label for the group.
   * `_` – a `PreferencesObject` representing the group.
+  * `dependencies?` – a list of [dependencies](#dependencies-dependencyany) for the group.
+  * `extras?` – optional object that can be used for [anything](#extras--readonly-key-string-any-).
 
 An example of grouped preferences:
 
