@@ -331,6 +331,14 @@ Each constraint must be an object with these properties:
   * `requirement: (value: T) => boolean` – the predicate that values must satisfy.
   * `message: (value: T) => string` – an error message for when a value does not satisfy the predicate.
 
+#### `dependencies?: Dependency<any>[]`
+
+Optional list of dependencies that can be used to indicate a dependency relation between preferences, which in turn can be used to enable or disable a preference in the GUI based on the values of other preferences.
+Each dependency must be an object with these properties:
+
+  * `preference: Preference<T>` – the preference depended on.
+  * `condition: (value: T) => boolean` – a predicate that the value of that preference must satisfy.
+
 #### `extras?: { readonly [key: string]: any }`
 
 Optional object that can be used for anything, for example styling a single preference.
