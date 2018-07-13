@@ -12,15 +12,15 @@ import {
     Preference,
 } from "./preferences/Preference";
 
-import { BooleanPreference } from "./preferences/BooleanPreference";
-import { DoublePreference } from "./preferences/DoublePreference";
-import { DoubleRangePreference } from "./preferences/DoubleRangePreference";
-import { IntegerPreference } from "./preferences/IntegerPreference";
-import { IntegerRangePreference } from "./preferences/IntegerRangePreference";
-import { MultichoicePreference } from "./preferences/MultichoicePreference";
-import { NumericPreference } from "./preferences/NumericPreference";
-import { RangePreference } from "./preferences/RangePreference";
-import { StringPreference } from "./preferences/StringPreference";
+export { BooleanPreference } from "./preferences/BooleanPreference";
+export { DoublePreference } from "./preferences/DoublePreference";
+export { DoubleRangePreference } from "./preferences/DoubleRangePreference";
+export { IntegerPreference } from "./preferences/IntegerPreference";
+export { IntegerRangePreference } from "./preferences/IntegerRangePreference";
+export { MultichoicePreference } from "./preferences/MultichoicePreference";
+export { NumericPreference } from "./preferences/NumericPreference";
+export { RangePreference } from "./preferences/RangePreference";
+export { StringPreference } from "./preferences/StringPreference";
 
 export interface RequestSummary<T extends AllowedTypes> {
     action: "set" | "get"
@@ -96,13 +96,4 @@ export {
     PreferencesObject,
     PreferenceGroup,
     Preference,
-    BooleanPreference,
-    DoublePreference,
-    DoubleRangePreference,
-    IntegerPreference,
-    IntegerRangePreference,
-    MultichoicePreference,
-    NumericPreference,
-    RangePreference,
-    StringPreference,
 };
