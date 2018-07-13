@@ -5,11 +5,14 @@
             "dom"
         ],
         "sourceMap": true,
-        "target": "es6",
+        "target": "es2017",
         "declaration": true,
         "strictNullChecks": true,
         "noImplicitAny": true,
-        "module": "ES6",
+        "module": "es2015",
+        "removeComments": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
         "moduleResolution": "node",
         "outDir": "dist",
         "preserveConstEnums": true

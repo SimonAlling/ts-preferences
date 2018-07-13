@@ -37,15 +37,15 @@
   },
   "sideEffects": false,
   "dependencies": {
-    "ts-storage": "^1.0.1",
-    "ts-type-guards": "^0.3.0"
+    "ts-storage": "^2.0.0",
+    "ts-type-guards": "^0.4.0"
   },
   "devDependencies": {
     "@types/jest": "^23.1.4",
     "jest": "^23.3.0",
     "ts-jest": "^23.0.0",
     "tslint": "^5.9.1",
-    "typescript": "^2.6.1"
+    "typescript": "^2.9.2"
   },
   "jest": {
     "transform": {
