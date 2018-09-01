@@ -37,7 +37,7 @@
   },
   "sideEffects": false,
   "dependencies": {
-    "ts-storage": "^2.0.0",
+    "ts-storage": "^3.0.0",
     "ts-type-guards": "^0.4.0"
   },
   "devDependencies": {

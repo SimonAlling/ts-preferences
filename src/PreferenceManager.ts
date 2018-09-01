@@ -131,7 +131,7 @@ function fromStorageStatus(s: Storage.Status): Status {
         case Storage.Status.ABSENT:             return Status.OK;
         case Storage.Status.TYPE_ERROR:         return Status.TYPE_ERROR;
         case Storage.Status.JSON_ERROR:         return Status.JSON_ERROR;
-        case Storage.Status.LOCALSTORAGE_ERROR: return Status.LOCALSTORAGE_ERROR;
+        case Storage.Status.STORAGE_ERROR:      return Status.LOCALSTORAGE_ERROR;
     }
     return assertUnreachable(s);
 }
