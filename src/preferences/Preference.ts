@@ -1,4 +1,6 @@
 import { isString } from "ts-type-guards";
+import { AllowedTypes } from "ts-storage";
+export { AllowedTypes, ItemTypes } from "ts-storage";
 
 import {
     ValueOrError,
@@ -25,8 +27,6 @@ export interface Dependency<T extends AllowedTypes> {
     preference: Preference<T>
     condition: (value: T) => boolean
 }
-
-export type AllowedTypes = boolean | number | string;
 
 export interface FromString<T> {
     fromString: (s: string) => ValueOrError<T>
