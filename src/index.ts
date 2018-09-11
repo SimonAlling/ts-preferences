@@ -8,6 +8,7 @@ import {
 } from "./PreferenceManager";
 import {
     AllowedTypes,
+    ItemTypes,
     FromString,
     Preference,
 } from "./preferences/Preference";
@@ -91,6 +92,7 @@ export function init(
 
 export {
     AllowedTypes,
+    ItemTypes,
     FromString,
     Status,
     Response,
