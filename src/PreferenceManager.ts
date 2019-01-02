@@ -129,6 +129,7 @@ function fromStorageStatus(s: Storage.Status): Status {
     switch (s) {
         case Storage.Status.OK:                 return Status.OK;
         case Storage.Status.ABSENT:             return Status.OK;
+        case Storage.Status.NUMBER_ERROR:       return Status.INVALID_VALUE;
         case Storage.Status.TYPE_ERROR:         return Status.TYPE_ERROR;
         case Storage.Status.JSON_ERROR:         return Status.JSON_ERROR;
         case Storage.Status.STORAGE_ERROR:      return Status.LOCALSTORAGE_ERROR;

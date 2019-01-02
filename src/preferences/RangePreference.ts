@@ -36,8 +36,8 @@ export abstract class RangePreference extends NumericPreference implements FromS
         if (Number.isNaN(min) || Number.isNaN(max)) {
             throw new Error(`Parameters 'min' and 'max' cannot be NaN, but they were ${min} and ${max}, respectively, for ${this.asString()}.`);
         }
-        if (!(this.infinite || Number.isFinite(min) && Number.isFinite(max))) {
-            throw new Error(`Parameters 'min' and 'max' must be finite numbers (unless 'infinite' is true), but they were ${min} and ${max}, respectively, for ${this.asString()}.`);
+        if (!(Number.isFinite(min) && Number.isFinite(max))) {
+            throw new Error(`Parameters 'min' and 'max' must be finite numbers, but they were ${min} and ${max}, respectively, for ${this.asString()}.`);
         }
         if (min > max) {
             throw new Error(`Parameter 'min' cannot be greater than parameter 'max', but they were ${min} and ${max}, respectively, for ${this.asString()}.`);

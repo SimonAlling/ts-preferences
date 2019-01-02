@@ -1,6 +1,6 @@
 import { isString } from "ts-type-guards";
 import { AllowedTypes } from "ts-storage";
-export { AllowedTypes, ItemTypes } from "ts-storage";
+export { AllowedTypes } from "ts-storage";
 
 import {
     ValueOrError,

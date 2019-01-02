@@ -1,3 +1,3 @@
-import { Preference, ItemTypes } from "./Preference";
+import { Preference, AllowedTypes } from "./Preference";
 
-export class ListPreference<T extends ItemTypes> extends Preference<ReadonlyArray<T>> {}
+export class ListPreference<T extends AllowedTypes> extends Preference<ReadonlyArray<T>> {}

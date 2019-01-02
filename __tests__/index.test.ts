@@ -57,6 +57,22 @@ const data_Range = {
     default: 5,
 };
 
+const data_Numeric_Infinity = {
+    key: "favorite_number",
+    label: "Favorite number",
+    description: "Your favorite number",
+    default: Infinity,
+};
+
+const data_Range_Infinity = {
+    key: "infinite_range",
+    label: "Infinite range",
+    description: "Infinite range",
+    min: 0,
+    max: Infinity,
+    default: 5,
+};
+
 const pref_Boolean = new BooleanPreference(data_Boolean);
 
 const P = {
@@ -104,30 +120,24 @@ it("checks that getType works", () => {
     expect(pref_Boolean.getType()).toBe("BooleanPreference");
 });
 
-it("checks that finite numeric preferences throw on ±Infinity", () => {
+it("checks that numeric preferences throw on ±Infinity", () => {
     const msg = "Infinity is not a finite number";
-    const data = Object.create(data_Range);
-    data.default = Infinity;
-    expect(() => new IntegerRangePreference(data)).toThrow(msg);
-    expect(() => new DoubleRangePreference(data)).toThrow(msg);
-    data.default = -Infinity;
-    expect(() => new IntegerRangePreference(data)).toThrow(msg);
-    expect(() => new DoubleRangePreference(data)).toThrow(msg);
+    expect(() => new IntegerPreference(data_Numeric_Infinity)).toThrow(msg);
+    expect(() => new DoublePreference(data_Numeric_Infinity)).toThrow(msg);
+});
+
+it("checks that a range cannot be infinitely large", () => {
+    const msg = /must be finite numbers/;
+    expect(() => new IntegerRangePreference(data_Range_Infinity)).toThrow(msg);
+    expect(() => new DoubleRangePreference(data_Range_Infinity)).toThrow(msg);
 });
 
 it("checks that all numeric preferences throw on NaN", () => {
     const msg = /NaN is not a( finite)? number/;
-    const data_finite = Object.create(data_Range);
-    data_finite.default = NaN;
-    const data_infinite = Object.create(data_Range);
-    data_infinite.infinite = true;
-    data_infinite.default = NaN;
-    expect(() => new IntegerPreference(data_finite)).toThrow(msg);
-    expect(() => new DoublePreference(data_finite)).toThrow(msg);
-    expect(() => new IntegerRangePreference(data_finite)).toThrow(msg);
-    expect(() => new DoubleRangePreference(data_finite)).toThrow(msg);
-    expect(() => new IntegerPreference(data_infinite)).toThrow(msg);
-    expect(() => new DoublePreference(data_infinite)).toThrow(msg);
-    expect(() => new IntegerRangePreference(data_infinite)).toThrow(msg);
-    expect(() => new DoubleRangePreference(data_infinite)).toThrow(msg);
+    const data_nan = Object.create(data_Range);
+    data_nan.default = NaN;
+    expect(() => new IntegerPreference(data_nan)).toThrow(msg);
+    expect(() => new DoublePreference(data_nan)).toThrow(msg);
+    expect(() => new IntegerRangePreference(data_nan)).toThrow(msg);
+    expect(() => new DoubleRangePreference(data_nan)).toThrow(msg);
 });
