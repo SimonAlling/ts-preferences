@@ -15,6 +15,15 @@ import {
     SIMPLE_RESPONSE_HANDLER,
 } from "../src/index";
 
+interface Expect extends jest.Matchers<void> {
+    toSatisfy: (x: any) => boolean
+    toNotSatisfy: (x: any) => boolean
+    extend: (extensions: { [ k: string ]: any }) => void
+    (x: any): Expect
+}
+
+declare const expect: Expect
+
 expect.extend({
   toSatisfy<T>(received: T, predicate: (x: T) => boolean) {
     if (predicate(received)) {
@@ -88,7 +97,7 @@ it("saves and reads a preference value", () => {
     expect((() => {
         PM.set(P.number_of_foobars, 42);
         return PM.get(P.number_of_foobars);
-    })()).toSatisfy(x => x.value === 42 && [ Status.OK, Status.LOCALSTORAGE_ERROR ].some(s => s === x.status));
+    })()).toSatisfy((x: any) => x.value === 42 && [ Status.OK, Status.LOCALSTORAGE_ERROR ].some(s => s === x.status));
 });
 
 it("checks that getType works", () => {
