@@ -34,6 +34,7 @@
     "test": "jest",
     "verify": "npm run build && npm run lint && npm run test",
     "build": "npm run clean && tsc -d -p . && npm run rename && tsc --module CommonJS -p .",
+    "prepublishOnly": "npm run build && npm test",
     "clean": "rm -rf dist/*",
     "rename": "renamer --force --find \"/\\.js$/\" --replace \".mjs\" \"dist/**\""
   },
