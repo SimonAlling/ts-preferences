@@ -95,10 +95,6 @@ it("checks that getType works", () => {
     expect(pref_Boolean.getType()).toBe("BooleanPreference");
 });
 
-it("checks that asString works", () => {
-    expect(pref_Boolean.asString()).toBe("BooleanPreference 'insert_foobars'");
-});
-
 it("checks that finite numeric preferences throw on ±Infinity", () => {
     const msg = "Infinity is not a finite number";
     const data = Object.create(data_Range);
