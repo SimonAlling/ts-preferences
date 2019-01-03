@@ -24,6 +24,11 @@ interface Expect extends jest.Matchers<void> {
 
 declare const expect: Expect
 
+beforeEach(() => {
+    localStorage.clear();
+    sessionStorage.clear();
+});
+
 expect.extend({
   toSatisfy<T>(received: T, predicate: (x: T) => boolean) {
     if (predicate(received)) {
@@ -85,10 +90,10 @@ const PM = new PreferenceManager(P, "JEST-preference-");
 const Preferences = init(P, "JEST", SIMPLE_RESPONSE_HANDLER);
 
 it("can create a preference", () => {
-    expect(pref_Boolean.key).toBe("insert_foobars");
-    expect(pref_Boolean.label).toBe("Insert foobars");
-    expect(pref_Boolean.description).toBe("Insert some foobars");
-    expect(pref_Boolean.default).toBe(true);
+    expect(pref_Boolean.key).toBe(data_Boolean.key);
+    expect(pref_Boolean.label).toBe(data_Boolean.label);
+    expect(pref_Boolean.description).toBe(data_Boolean.description);
+    expect(pref_Boolean.default).toBe(data_Boolean.default);
 });
 
 it("can create a preference with a custom constraint", () => {
@@ -104,16 +109,13 @@ it("can create a preference with a custom constraint", () => {
 
 it("does not allow the empty string as key", () => {
     const msg = "Empty preference key";
-    const data = Object.create(data_Boolean);
-    data.key = "";
+    const data = { ...data_Boolean, key: "" };
     expect(() => new BooleanPreference(data)).toThrow(msg);
 });
 
 it("can save and read a preference value", () => {
-    expect((() => {
-        PM.set(P.number_of_foobars, 42);
-        return PM.get(P.number_of_foobars);
-    })()).toSatisfy((x: any) => x.value === 42 && [ Status.OK, Status.LOCALSTORAGE_ERROR ].some(s => s === x.status));
+    PM.set(P.number_of_foobars, 42);
+    expect(PM.get(P.number_of_foobars)).toEqual({ value: 42, status: Status.OK });
 });
 
 it("produces correct string representations", () => {
@@ -135,8 +137,7 @@ it("throws on an infinitely large range in a range preference", () => {
 
 it("throws on NaN in a numeric preference", () => {
     const msg = /NaN is not a( finite)? number/;
-    const data_nan = Object.create(data_Range);
-    data_nan.default = NaN;
+    const data_nan = { ...data_Range, default: NaN };
     expect(() => new IntegerPreference(data_nan)).toThrow(msg);
     expect(() => new DoublePreference(data_nan)).toThrow(msg);
     expect(() => new IntegerRangePreference(data_nan)).toThrow(msg);
