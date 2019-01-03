@@ -81,11 +81,11 @@ export abstract class Preference<T extends AllowedTypes> {
         return this.constructor.name;
     }
 
-    protected asString(): string {
+    public toString(): string {
         return `${this.constructor.name} '${this.key}'`;
     }
 
     private invalidValue(value: T, message: string): void {
-        throw new Error(`${stringify(value)} is not a valid value for ${this.asString()}. Reason: ${message}`);
+        throw new Error(`${stringify(value)} is not a valid value for ${this}. Reason: ${message}`);
     }
 }
