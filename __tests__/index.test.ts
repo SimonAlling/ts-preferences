@@ -84,14 +84,14 @@ const PM = new PreferenceManager(P, "JEST-preference-");
 
 const Preferences = init(P, "JEST", SIMPLE_RESPONSE_HANDLER);
 
-it("creates a preference", () => {
+it("can create a preference", () => {
     expect(pref_Boolean.key).toBe("insert_foobars");
     expect(pref_Boolean.label).toBe("Insert foobars");
     expect(pref_Boolean.description).toBe("Insert some foobars");
     expect(pref_Boolean.default).toBe(true);
 });
 
-it("creates a preference with a custom constraint", () => {
+it("can create a preference with a custom constraint", () => {
     const msg = "Only true is allowed.";
     expect(() => new BooleanPreference({
         key: "only_true",
@@ -102,37 +102,38 @@ it("creates a preference with a custom constraint", () => {
     })).toThrow(msg);
 });
 
-it("checks that preferences cannot have the empty string as key", () => {
+it("does not allow the empty string as key", () => {
     const msg = "Empty preference key";
     const data = Object.create(data_Boolean);
     data.key = "";
     expect(() => new BooleanPreference(data)).toThrow(msg);
 });
 
-it("saves and reads a preference value", () => {
+it("can save and read a preference value", () => {
     expect((() => {
         PM.set(P.number_of_foobars, 42);
         return PM.get(P.number_of_foobars);
     })()).toSatisfy((x: any) => x.value === 42 && [ Status.OK, Status.LOCALSTORAGE_ERROR ].some(s => s === x.status));
 });
 
-it("checks that getType works", () => {
-    expect(pref_Boolean.getType()).toBe("BooleanPreference");
+it("produces correct string representations", () => {
+    expect(pref_Boolean.getType()).toBe(BooleanPreference.name);
+    expect(pref_Boolean.toString()).toBe(`${BooleanPreference.name} '${data_Boolean.key}'`);
 });
 
-it("checks that numeric preferences throw on ±Infinity", () => {
+it("throws on ±Infinity in a numeric preference", () => {
     const msg = "Infinity is not a finite number";
     expect(() => new IntegerPreference(data_Numeric_Infinity)).toThrow(msg);
     expect(() => new DoublePreference(data_Numeric_Infinity)).toThrow(msg);
 });
 
-it("checks that a range cannot be infinitely large", () => {
+it("throws on an infinitely large range in a range preference", () => {
     const msg = /must be finite numbers/;
     expect(() => new IntegerRangePreference(data_Range_Infinity)).toThrow(msg);
     expect(() => new DoubleRangePreference(data_Range_Infinity)).toThrow(msg);
 });
 
-it("checks that all numeric preferences throw on NaN", () => {
+it("throws on NaN in a numeric preference", () => {
     const msg = /NaN is not a( finite)? number/;
     const data_nan = Object.create(data_Range);
     data_nan.default = NaN;
