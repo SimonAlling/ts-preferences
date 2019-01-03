@@ -8,9 +8,8 @@ import {
 } from "./Preference";
 
 export class IntegerPreference extends NumericPreference {
-    public static readonly isInteger: (v: number) => boolean = v => Number.isInteger(v) || Math.abs(v) === Infinity;
     public static readonly CONSTRAINT_INTEGER: Constraint<number> = {
-        requirement: IntegerPreference.isInteger,
+        requirement: Number.isInteger,
         message: v => `${v} is not an integer.`,
     };
 
