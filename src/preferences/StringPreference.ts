@@ -47,8 +47,13 @@ export class StringPreference extends Preference<string> implements FromString<s
         }
         prependConstraints(CONSTRAINTS, data);
         super(data);
-        if (minLength < 0 || maxLength < 0) {
-            throw new Error(`Parameters 'minLength' and 'maxLength' cannot be negative, but they were ${minLength} and ${maxLength} in ${this}.`);
+        // One might think that we should check that minLength ≤ maxLength here.
+        // But such a check would constitute dead code, because in that case,
+        // there is no possible default value, so the super call will throw
+        // before we get here. While we could perform the check before the super
+        // call, it then would not be able to use `this` in its error message.
+        if (minLength < 0) {
+            throw new Error(`Parameter 'minLength' cannot be negative, but it was ${minLength} in ${this}.`);
         }
         this.multiline = data.multiline;
         this.maxLength = maxLength;
