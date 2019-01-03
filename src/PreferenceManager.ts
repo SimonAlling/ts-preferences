@@ -67,7 +67,7 @@ export class PreferenceManager {
         allPreferences.forEach(p => {
             p.dependencies.forEach(dependency => {
                 if (this.cache.get(dependency.preference) === undefined) {
-                    throw new Error(`Dependency error in preference ${stringify(p.key)}: ${unknown(dependency.preference)}`);
+                    throw new Error(`Dependency error in ${p}: ${unknown(dependency.preference)}`);
                 }
             });
         });

@@ -48,7 +48,7 @@ export class StringPreference extends Preference<string> implements FromString<s
         prependConstraints(CONSTRAINTS, data);
         super(data);
         if (minLength < 0 || maxLength < 0) {
-            throw new Error(`Parameters 'minLength' and 'maxLength' cannot be negative, but they were ${minLength} and ${maxLength}, respectively, for ${this}.`);
+            throw new Error(`Parameters 'minLength' and 'maxLength' cannot be negative, but they were ${minLength} and ${maxLength} in ${this}.`);
         }
         this.multiline = data.multiline;
         this.maxLength = maxLength;

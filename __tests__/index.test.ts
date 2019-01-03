@@ -103,7 +103,7 @@ it("creates a preference with a custom constraint", () => {
 });
 
 it("checks that preferences cannot have the empty string as key", () => {
-    const msg = "cannot be the empty string";
+    const msg = "Empty preference key";
     const data = Object.create(data_Boolean);
     data.key = "";
     expect(() => new BooleanPreference(data)).toThrow(msg);

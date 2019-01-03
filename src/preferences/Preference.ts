@@ -47,7 +47,7 @@ export abstract class Preference<T extends AllowedTypes> {
 
     constructor(data: PreferenceData<T>) {
         if (data.key === "") {
-            throw new TypeError(`A preference key cannot be the empty string, but this was the case for this ${this.getType()} data:\n${stringify(data)}`);
+            throw new TypeError(`Empty preference key in this ${this.getType()}:\n${stringify(data)}`);
         }
         this.key = data.key;
         this.default = data.default;

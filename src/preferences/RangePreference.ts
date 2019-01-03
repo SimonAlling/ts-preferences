@@ -33,14 +33,11 @@ export abstract class RangePreference extends NumericPreference implements FromS
         ];
         prependConstraints(CONSTRAINTS, data);
         super(data);
-        if (Number.isNaN(min) || Number.isNaN(max)) {
-            throw new Error(`Parameters 'min' and 'max' cannot be NaN, but they were ${min} and ${max}, respectively, for ${this}.`);
-        }
         if (!(Number.isFinite(min) && Number.isFinite(max))) {
-            throw new Error(`Parameters 'min' and 'max' must be finite numbers, but they were ${min} and ${max}, respectively, for ${this}.`);
+            throw new Error(`Parameters 'min' and 'max' must be finite numbers, but they were ${min} and ${max} in ${this}.`);
         }
         if (min > max) {
-            throw new Error(`Parameter 'min' cannot be greater than parameter 'max', but they were ${min} and ${max}, respectively, for ${this}.`);
+            throw new Error(`Parameter 'min' cannot be greater than parameter 'max', but they were ${min} and ${max} in ${this}.`);
         }
         this.min = min;
         this.max = max;

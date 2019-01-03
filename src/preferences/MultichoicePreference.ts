@@ -36,7 +36,7 @@ export class MultichoicePreference<T extends AllowedTypes> extends Preference<T>
         prependConstraints(CONSTRAINTS, data);
         super(data);
         if (options.length < 2) {
-            throw new Error(`Parameter 'options' must contain at least two elements, but this was not the case for ${this}.`);
+            throw new Error(`Parameter 'options' has less than two elements in ${this}.`);
         }
         const seenOptionValues: T[] = [];
         options.forEach(option => {
@@ -44,7 +44,7 @@ export class MultichoicePreference<T extends AllowedTypes> extends Preference<T>
             const validationResult = this.validate(option.value);
             if (isString(validationResult)) {
                 // super is used above because we should not use the specialized validation, which checks if the value is in the list of options.
-                throw new Error(`Option value ${stringify(option.value)} (with label '${option.label}') in ${this} is invalid. Reason: ${validationResult}`);
+                throw new Error(`Option value ${stringify(option.value)} in ${this} is invalid. Reason: ${validationResult}`);
             }
             if (seenOptionValues.indexOf(option.value) > -1) {
                 throw new Error(`Multiple options with value ${stringify(option.value)} in ${this}.`);
