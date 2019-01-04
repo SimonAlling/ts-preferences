@@ -143,3 +143,71 @@ it("throws on NaN in a numeric preference", () => {
     expect(() => new IntegerRangePreference(data_nan)).toThrow(msg);
     expect(() => new DoubleRangePreference(data_nan)).toThrow(msg);
 });
+
+it("throws on too few options in a multichoice preference", () => {
+    const msg = /two elements/;
+    expect(() => new MultichoicePreference({
+        key: "dprk_election",
+        label: "Cast your vote",
+        options: [ {
+            value: "kim",
+            label: "Kim",
+        } ],
+        default: "kim",
+    })).toThrow(msg);
+});
+
+it("throws on an invalid default in a multichoice preference", () => {
+    const msg = /available options/;
+    expect(() => new MultichoicePreference({
+        key: "colors",
+        label: "Choose a color",
+        options: [ {
+            value: "red",
+            label: "Red",
+        }, {
+            value: "blue",
+            label: "Blue",
+        } ],
+        default: "panda",
+    })).toThrow(msg);
+});
+
+it("throws on duplicate options in a multichoice preference", () => {
+    const msg = /Multiple options/;
+    expect(() => new MultichoicePreference({
+        key: "colors",
+        label: "Choose a color",
+        options: [ {
+            value: "red",
+            label: "Red",
+        }, {
+            value: "red",
+            label: "Blue",
+        } ],
+        default: "red",
+    })).toThrow(msg);
+});
+
+it("throws on minLength > maxLength in a string preference", () => {
+    const msg = /length/;
+    expect(() => new StringPreference({
+        key: "paradox",
+        label: "Enter a string",
+        default: "",
+        multiline: false,
+        minLength: 5,
+        maxLength: 1,
+    })).toThrow(msg);
+});
+
+it("throws on min > max in a range preference", () => {
+    const msg = /(min|max)imum value/;
+    expect(() => new IntegerRangePreference({
+        key: "paradox",
+        label: "Pick a number",
+        default: 5,
+        min: 5,
+        max: 1,
+    })).toThrow(msg);
+});
