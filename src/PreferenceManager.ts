@@ -83,14 +83,18 @@ export class PreferenceManager {
         const resp = Storage.get(this.LS_PREFIX + preference.key, preference.default);
         if (resp.status === Storage.Status.OK) {
             const validationResult = preference.validate(resp.value);
-            return isString(validationResult) ? {
-                status: Status.INVALID_VALUE,
-                value: preference.toValid(resp.value),
-                saved: resp.value,
-            } : {
-                status: Status.OK,
-                value: resp.value,
-            };
+            return (
+                isString(validationResult)
+                ? {
+                    status: Status.INVALID_VALUE,
+                    value: preference.toValid(resp.value),
+                    saved: resp.value,
+                }
+                : {
+                    status: Status.OK,
+                    value: resp.value,
+                }
+            );
         }
         return {
             status: fromStorageStatus(resp.status),

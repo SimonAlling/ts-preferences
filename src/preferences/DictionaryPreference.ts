@@ -1,5 +1,6 @@
-import { Preference, AllowedTypes } from "./Preference";
 import { Dictionary } from "ts-storage";
+
+import { Preference, AllowedTypes } from "./Preference";
 
 export class DictionaryPreference<
     K extends string,

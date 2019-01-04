@@ -1,5 +1,3 @@
-import { isString } from "ts-type-guards";
-
 import { ValueOrError } from "../Utilities";
 
 import { DoublePreference } from "./DoublePreference";

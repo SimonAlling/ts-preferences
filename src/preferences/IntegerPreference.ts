@@ -1,11 +1,7 @@
 import { ValueOrError } from "../Utilities";
 
 import { NumericPreference, NumericPreferenceData } from "./NumericPreference";
-import {
-    Constraint,
-    PreferenceData,
-    prependConstraints,
-} from "./Preference";
+import { Constraint, prependConstraints } from "./Preference";
 
 export class IntegerPreference extends NumericPreference {
     public getClassName() { return "IntegerPreference"; }
@@ -17,9 +13,11 @@ export class IntegerPreference extends NumericPreference {
 
     public static parse(s: string): ValueOrError<number> {
         const parsed = parseInt(s, 10);
-        return Number.isNaN(parsed)
+        return (
+            Number.isNaN(parsed)
             ? `"${s}" is not an integer.`
-            : { value: parsed };
+            : { value: parsed }
+        );
     }
 
     constructor(data: NumericPreferenceData) {

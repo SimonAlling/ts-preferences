@@ -1,9 +1,6 @@
 import { isString } from "ts-type-guards";
 
-import {
-    ValueOrError,
-    stringify,
-} from "../Utilities";
+import { stringify } from "../Utilities";
 
 import {
     AllowedTypes,

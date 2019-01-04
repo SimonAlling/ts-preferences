@@ -1,11 +1,9 @@
 import { ValueOrError } from "../Utilities";
 
-import { DoublePreference } from "./DoublePreference";
 import { NumericPreference, NumericPreferenceData } from "./NumericPreference";
 import {
     Constraint,
     FromString,
-    PreferenceData,
     prependConstraints,
 } from "./Preference";
 

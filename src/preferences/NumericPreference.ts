@@ -1,8 +1,6 @@
 import { isString } from "ts-type-guards";
 
-import {
-    ValueOrError,
-} from "../Utilities";
+import { ValueOrError } from "../Utilities";
 
 import {
     Constraint,
@@ -16,9 +14,11 @@ export interface NumericPreferenceData extends PreferenceData<number> {}
 
 export abstract class NumericPreference extends Preference<number> implements FromString<number> {
     protected static postParse(p: NumericPreference, parsed: ValueOrError<number>): ValueOrError<number> {
-        return isString(parsed)
+        return (
+            isString(parsed)
             ? parsed
-            : p.validate(parsed.value);
+            : p.validate(parsed.value)
+        );
     }
 
     constructor(data: NumericPreferenceData) {

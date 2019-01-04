@@ -1,20 +1,17 @@
 import { ValueOrError } from "../Utilities";
 
 import { NumericPreference } from "./NumericPreference";
-import {
-    Constraint,
-    PreferenceData,
-    prependConstraints,
-} from "./Preference";
 
 export class DoublePreference extends NumericPreference {
     public getClassName() { return "DoublePreference"; }
 
     public static parse(s: string): ValueOrError<number> {
         const parsed = parseFloat(s);
-        return Number.isNaN(parsed)
+        return (
+            Number.isNaN(parsed)
             ? `"${s}" is not a number.`
-            : { value: parsed };
+            : { value: parsed }
+        );
     }
 
     public fromString(s: string): ValueOrError<number> {
