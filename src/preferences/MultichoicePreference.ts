@@ -23,6 +23,8 @@ export interface MultichoicePreferenceData<T> extends PreferenceData<T> {
 }
 
 export class MultichoicePreference<T extends AllowedTypes> extends Preference<T> {
+    public getClassName() { return "MultichoicePreference"; }
+
     public readonly options: MultichoicePreferenceOption<T>[];
 
     constructor(data: MultichoicePreferenceData<T>) {

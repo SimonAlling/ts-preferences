@@ -8,6 +8,8 @@ import {
 } from "./Preference";
 
 export class IntegerPreference extends NumericPreference {
+    public getClassName() { return "IntegerPreference"; }
+
     public static readonly CONSTRAINT_INTEGER: Constraint<number> = {
         requirement: Number.isInteger,
         message: v => `${v} is not an integer.`,

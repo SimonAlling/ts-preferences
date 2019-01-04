@@ -37,6 +37,10 @@ export function prependConstraints<T>(cs: Constraint<T>[], data: PreferenceData<
 }
 
 export abstract class Preference<T extends AllowedTypes> {
+    // Because class names may be mangled during minification, they have to be
+    // explicitly defined in each subclass using this method:
+    public abstract getClassName(): string;
+
     public readonly key: string;
     public readonly default: T;
     public readonly label: string;
@@ -47,7 +51,7 @@ export abstract class Preference<T extends AllowedTypes> {
 
     constructor(data: PreferenceData<T>) {
         if (data.key === "") {
-            throw new TypeError(`Empty preference key in this ${this.getType()}:\n${stringify(data)}`);
+            throw new TypeError(`Empty preference key in this ${this.getClassName()}:\n${stringify(data)}`);
         }
         this.key = data.key;
         this.default = data.default;
@@ -77,12 +81,8 @@ export abstract class Preference<T extends AllowedTypes> {
         return isString(this.validate(value)) ? this.default : value;
     }
 
-    public getType(): string {
-        return this.constructor.name;
-    }
-
     public toString(): string {
-        return `${this.constructor.name} '${this.key}'`;
+        return `${this.getClassName()} '${this.key}'`;
     }
 
     private invalidValue(value: T, message: string): void {

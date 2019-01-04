@@ -8,6 +8,8 @@ import {
 } from "./Preference";
 
 export class DoublePreference extends NumericPreference {
+    public getClassName() { return "DoublePreference"; }
+
     public static parse(s: string): ValueOrError<number> {
         const parsed = parseFloat(s);
         return Number.isNaN(parsed)

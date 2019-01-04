@@ -18,6 +18,8 @@ export interface StringPreferenceData extends PreferenceData<string> {
 }
 
 export class StringPreference extends Preference<string> implements FromString<string> {
+    public getClassName() { return "StringPreference"; }
+
     protected static REGEX_LINE_BREAKS = /\n+/g;
     public readonly multiline: boolean;
     public readonly maxLength: number;

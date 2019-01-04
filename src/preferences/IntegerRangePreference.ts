@@ -6,6 +6,8 @@ import { Constraint, prependConstraints } from "./Preference";
 import { RangePreference, RangePreferenceData } from "./RangePreference";
 
 export class IntegerRangePreference extends RangePreference {
+    public getClassName() { return "IntegerRangePreference"; }
+
     constructor(data: RangePreferenceData) {
         const CONSTRAINTS: Constraint<number>[] = [
             IntegerPreference.CONSTRAINT_INTEGER,

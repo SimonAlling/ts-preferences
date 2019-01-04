@@ -3,10 +3,12 @@ import {
     PreferenceManager,
     Preference,
     BooleanPreference,
+    DictionaryPreference,
     DoublePreference,
     DoubleRangePreference,
     IntegerPreference,
     IntegerRangePreference,
+    ListPreference,
     MultichoicePreference,
     NumericPreference,
     RangePreference,
@@ -79,6 +81,65 @@ const data_Range_Infinity = {
 };
 
 const pref_Boolean = new BooleanPreference(data_Boolean);
+const pref_String = new StringPreference({
+    key: "name",
+    label: "Name",
+    default: "John Smith",
+    multiline: false,
+});
+const pref_Integer = new IntegerPreference({
+    key: "favorite_integer",
+    label: "Favorite integer",
+    default: 42,
+});
+const pref_Double = new DoublePreference({
+    key: "favorite_double",
+    label: "Favorite double",
+    default: 3.14,
+});
+const pref_IntegerRange = new IntegerRangePreference({
+    key: "favorite_digit",
+    label: "Favorite digit",
+    default: 0,
+    min: 0,
+    max: 9,
+});
+const pref_Dictionary = new DictionaryPreference({
+    key: "starting_point",
+    label: "Starting point",
+    default: { x: 5, y: 5 },
+});
+const pref_List = new ListPreference({
+    key: "aliases",
+    label: "Aliases",
+    default: [ "John", "Johnny", "The Man" ],
+});
+const pref_Multichoice = new MultichoicePreference({
+    key: "speed",
+    label: "Speed",
+    default: "normal",
+    options: [ {
+        value: "slow",
+        label: "Slow",
+    }, {
+        value: "normal",
+        label: "Normal",
+    }, {
+        value: "fast",
+        label: "Fast",
+    } ],
+});
+
+const EXAMPLE_PREFERENCES = [
+    pref_Boolean,
+    pref_String,
+    pref_Integer,
+    pref_Double,
+    pref_IntegerRange,
+    pref_Dictionary,
+    pref_List,
+    pref_Multichoice,
+];
 
 const P = {
     insert_foobars: new BooleanPreference(data_Boolean),
@@ -119,8 +180,12 @@ it("can save and read a preference value", () => {
 });
 
 it("produces correct string representations", () => {
-    expect(pref_Boolean.getType()).toBe(BooleanPreference.name);
-    expect(pref_Boolean.toString()).toBe(`${BooleanPreference.name} '${data_Boolean.key}'`);
+    // Note that .name works only when code is not minified, which is
+    // exactly why the getClassName method exists.
+    EXAMPLE_PREFERENCES.forEach(p => {
+        expect(p.getClassName()).toBe(p.constructor.name);
+        expect(p.toString()).toBe(`${p.getClassName()} '${p.key}'`);
+    });
 });
 
 it("throws on ±Infinity in a numeric preference", () => {

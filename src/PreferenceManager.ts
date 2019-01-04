@@ -41,10 +41,11 @@ export interface PreferenceGroup {
 }
 
 function unknown(p: Preference<any>): string {
-    return `Unknown preference. Please use only preferences from the object used to initialize the ${PreferenceManager.name}. This one is not among them:\n\n${stringify(p)}.`;
+    return `Unknown preference. Please use only preferences from the object used to initialize the ${PreferenceManager.className}. This one is not among them:\n\n${stringify(p)}.`;
 }
 
 export class PreferenceManager {
+    public static readonly className: string = "PreferenceManager";
     private readonly LS_PREFIX: string;
     private readonly cache: Map<Preference<any>, any>;
 
