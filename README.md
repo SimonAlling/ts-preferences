@@ -232,7 +232,7 @@ function responseHandler<T>(summary: RequestSummary<T>, preferences: Preferences
 
         case Status.TYPE_ERROR:
             if (summary.action === "get") {
-                console.warn(`The value found in localStorage for preference '${summary.preference.key}' was not a ${typeof summary.preference.default}. Replacing it with ${JSON.stringify(response.value)}.`);
+                console.warn(`The value found in localStorage for preference '${summary.preference.key}' had the wrong type. Replacing it with ${JSON.stringify(response.value)}.`);
                 preferences.set(summary.preference, response.value);
             }
             return response;
@@ -340,13 +340,6 @@ Each dependency must be an object with these properties:
 
 Optional object that can be used for anything, for example styling a single preference.
 Should be used with great care because it has no type-safety at all.
-
-
-### `NumericPreference`
-
-#### `infinite?: boolean`
-
-Whether `-Infinity` and `Infinity` should be valid values.
 
 
 ### `StringPreference`
