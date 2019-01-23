@@ -64,7 +64,7 @@ export class StringPreference extends Preference<string> implements FromString<s
         return super.toValid(
             this.multiline
             ? truncated
-            : truncated.replace(StringPreference.REGEX_LINE_BREAKS, " ")
+            : truncated.replace(StringPreference.REGEX_LINE_BREAKS, " "),
         );
     }
 

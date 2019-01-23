@@ -1,5 +1,5 @@
-import { isString } from "ts-type-guards";
 import { AllowedTypes } from "ts-storage";
+import { isString } from "ts-type-guards";
 export { AllowedTypes } from "ts-storage";
 
 import {
