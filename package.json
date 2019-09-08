@@ -40,7 +40,7 @@
   },
   "sideEffects": false,
   "dependencies": {
-    "ts-storage": "^5.0.0",
+    "ts-storage": "^5.0.1",
     "ts-type-guards": "^0.6.1"
   },
   "devDependencies": {
