@@ -13,8 +13,6 @@ import {
     NumericPreference,
     RangePreference,
     StringPreference,
-    init,
-    SIMPLE_RESPONSE_HANDLER,
 } from "../src/index";
 
 interface Expect extends jest.Matchers<void> {
@@ -146,9 +144,7 @@ const P = {
     number_of_foobars: new IntegerRangePreference(data_Range),
 };
 
-const PM = new PreferenceManager(P, "JEST-preference-");
-
-const Preferences = init(P, "JEST", SIMPLE_RESPONSE_HANDLER);
+const Preferences = new PreferenceManager(P, "JEST");
 
 it("can create a preference", () => {
     expect(pref_Boolean.key).toBe(data_Boolean.key);
@@ -175,8 +171,8 @@ it("does not allow the empty string as key", () => {
 });
 
 it("can save and read a preference value", () => {
-    PM.set(P.number_of_foobars, 42);
-    expect(PM.get(P.number_of_foobars)).toEqual({ value: 42, status: Status.OK });
+    Preferences.set(P.number_of_foobars, 42);
+    expect(Preferences.getRaw(P.number_of_foobars)).toEqual({ value: 42, status: Status.OK });
 });
 
 it("produces correct string representations", () => {

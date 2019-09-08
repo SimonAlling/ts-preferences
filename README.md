@@ -14,6 +14,10 @@
     1. [The `P` Object](#the-p-object)
     1. [Preference Groups](#preference-groups)
     1. [Error Handling](#error-handling)
+1. [Upgrading to v2](#upgrading-to-v2)
+    1. [Initialization](#initialization)
+    1. [Response Handler](#response-handler)
+    1. [Preference Dependencies](#preference-dependencies)
     1. [HTML Menu Generation](#html-menu-generation)
 1. [API Reference](#api-reference)
     1. [`Preference`](#preference)
@@ -43,9 +47,8 @@ And when requesting a preference value, you can always trust that you _will_ get
 
 This rather artificial example shows how preferences can be used with full type-safety:
 
-```javascript
-import * as TSPreferences from "ts-preferences";
-import { BooleanPreference, IntegerPreference } from "ts-preferences";
+```typescript
+import { BooleanPreference, IntegerPreference, PreferenceManager } from "ts-preferences";
 
 const P = {
     replace_title: new BooleanPreference({
@@ -63,11 +66,7 @@ const P = {
 };
 
 // Initialize a preference manager:
-const Preferences = TSPreferences.init(
-    P,
-    "my-awesome-app",
-    TSPreferences.SIMPLE_RESPONSE_HANDLER,
-);
+const Preferences = new PreferenceManager(P, "my-awesome-app-");
 
 // Replace title if corresponding preference is true:
 if (Preferences.get(P.replace_title)) {
@@ -94,13 +93,12 @@ function upTo(max: number): number {
 
 ### The `P` Object
 
-`get(p)`, `set(p, v)` and `reset(p)` work as expected if _and only if_ `p` is in the `PreferencesObject` given as the **first argument to `init`**.
+`get`, `set` and `reset` work as expected if _and only if_ `p` is in the `PreferencesObject` used to create the `PreferenceManager`.
 That is, you can use all preferences in `P`, _and only those_, when talking to `ts-preferences`.
 The following code compiles, **but crashes**:
 
-```javascript
-import * as TSPreferences from "ts-preferences";
-import { BooleanPreference } from "ts-preferences";
+```typescript
+import { BooleanPreference, PreferenceManager } from "ts-preferences";
 
 const forgedPreference = new BooleanPreference({
     key: "foo",
@@ -116,11 +114,7 @@ const P = {
     }),
 };
 
-const Preferences = TSPreferences.init(
-    P,
-    "my-awesome-app",
-    TSPreferences.SIMPLE_RESPONSE_HANDLER,
-);
+const Preferences = new PreferenceManager(P, "my-awesome-app-");
 
 Preferences.get(P.foo);                   // OK
 Preferences.set(P.foo, false);            // OK
@@ -148,7 +142,7 @@ A group is simply an object with these properties:
 
 An example of grouped preferences:
 
-```javascript
+```typescript
 const P = {
     video: {
         label: "Video Settings",
@@ -185,7 +179,7 @@ const P = {
 
 In this case, you might do something like this in your application:
 
-```javascript
+```typescript
 if (Preferences.get(P.video._.vsync)) {
     // ...
 }
@@ -196,103 +190,129 @@ if (Preferences.get(P.video._.vsync)) {
 
 Things can go wrong when getting or setting preferences.
 For example, `localStorage` may not be accessible, or the string saved therein may not parse to a value of the expected type.
-To take care of these cases in a graceful way, define a **response handler** and give it as an argument to `init`.
-Here is an example:
+To take care of these cases in a graceful way, define a **response handler** and give it as an argument to the `PreferenceManager` constructor.
+Here is a very basic example:
 
-```javascript
-import * as TSPreferences from "ts-preferences";
-import { Status, Response, RequestSummary, PreferencesInterface } from "ts-preferences";
+```typescript
+import { AllowedTypes, PreferenceManager, RequestSummary, Response, Status } from "ts-preferences";
 
 const P = {
     // ...
 };
 
-const Preferences = TSPreferences.init(
-    P,
-    "my-awesome-app",
-    responseHandler,
-);
+const Preferences = new PreferenceManager(P, "my-awesome-app-", loggingResponseHandler);
 
-function responseHandler<T>(summary: RequestSummary<T>, preferences: PreferencesInterface): Response<T> {
+function loggingResponseHandler<T extends AllowedTypes>(summary: RequestSummary<T>, preferences: PreferenceManager): Response<T> {
     const response = summary.response;
     switch (response.status) {
         case Status.OK:
-            return response;
-
-        case Status.INVALID_VALUE:
-            if (summary.action === "get") {
-                // response.saved is defined if and only if action is "get" and status is INVALID_VALUE:
-                console.warn(`The value found in localStorage for preference '${summary.preference.key}' (${JSON.stringify(response.saved)}) was invalid. Replacing it with ${JSON.stringify(response.value)}.`);
-                preferences.set(summary.preference, response.value);
-            }
-            if (summary.action === "set") {
-                console.warn(`Could not set value ${JSON.stringify(response.value)} for preference '${summary.preference.key}' because it was invalid.`);
-            }
-            return response;
-
-        case Status.TYPE_ERROR:
-            if (summary.action === "get") {
-                console.warn(`The value found in localStorage for preference '${summary.preference.key}' had the wrong type. Replacing it with ${JSON.stringify(response.value)}.`);
-                preferences.set(summary.preference, response.value);
-            }
-            return response;
-
-        case Status.JSON_ERROR:
-            if (summary.action === "get") {
-                console.warn(`The value found in localStorage for preference '${summary.preference.key}' could not be parsed. Replacing it with ${JSON.stringify(response.value)}.`);
-                preferences.set(summary.preference, response.value);
-            }
-            return response;
-
-        case Status.LOCALSTORAGE_FAILURE:
-            switch (summary.action) {
-                case "get":
-                    console.error(`Could not read preference '${summary.preference.key}' because localStorage could not be accessed. Using value ${JSON.stringify(summary.preference.default)}.`);
-                    return response;
-                case "set":
-                    console.error(`Could not save value ${JSON.stringify(summary.response.value)} for preference '${summary.preference.key}' because localStorage could not be accessed.`);
-                    return response;
-            }
-            return assertUnreachable(summary.action);
+            break;
+        default:
+            console.warn(`There was an error with preference '${summary.preference.key}'.`);
     }
-    return assertUnreachable(response.status); // enforces exhaustive case analysis
-}
-
-function assertUnreachable(x: never): never {
-    throw new Error("assertUnreachable: " + x);
+    return response;
 }
 ```
 
-(`assertUnreachable` is just a way to enforce exhaustiveness in the `switch` statement.)
+If you don't define a response handler, you will get no indication whatsoever if something goes wrong (but you _will_ get valid preference values).
 
-If you don't want to define a response handler, you can use `SIMPLE_RESPONSE_HANDLER`, which is exported by `ts-preferences`, e.g. `TSPreferences.SIMPLE_RESPONSE_HANDLER`.
-Note, however, that you will then get no indication whatsoever if something goes wrong (but you _will_ get valid preference values).
+If you want to use another response handler for a specific transaction, you can use `getWith` or `setWith`:
+
+```typescript
+const value = Preferences.getWith(loggingResponseHandler, P.foo);
+```
 
 
-### HTML Menu Generation
+## Upgrading to v2
 
-To generate a preferences menu, you need a generator function that takes a `PreferencesObject` and returns an `HTMLElement`:
+### Initialization
 
-```javascript
-const P = {
-    // ...
-};
+  * `init` is removed. Use the `PreferenceManager` constructor instead.
+  * Specifying a response handler is optional (defaults to `SIMPLE_RESPONSE_HANDLER`).
+  * The provided `localStorage` prefix is used as is (i.e. `"-preference-"` is not appended anymore). You should append it yourself so your users' saved preferences are not reset.
+
+**v1:**
+
+```typescript
+import * as TSPreferences from "ts-preferences";
 
 const Preferences = TSPreferences.init(
     P,
     "my-awesome-app",
     TSPreferences.SIMPLE_RESPONSE_HANDLER,
 );
-
-function generator(ps: PreferencesObject): HTMLElement {
-    const form = document.createElement("form");
-    // Probably a lot of code here.
-    return form;
-}
-
-const menu = Preferences.htmlMenu(generator);
-document.body.appendChild(menu);
 ```
+
+**v2:**
+
+```typescript
+import { PreferenceManager } from "ts-preferences";
+
+const Preferences = new PreferenceManager(
+    P,
+    "my-awesome-app-preference-", // NB: "-preference-" appended!
+);
+```
+
+
+### Response Handler
+
+  * `Status.LOCALSTORAGE_ERROR` is renamed to `Status.STORAGE_ERROR`.
+
+**v1:**
+
+```typescript
+switch (response.status) {
+    // ...
+    case Status.LOCALSTORAGE_ERROR:
+    // ...
+}
+```
+
+**v2:**
+
+```typescript
+switch (response.status) {
+    // ...
+    case Status.STORAGE_ERROR:
+    // ...
+}
+```
+
+
+### Preference Dependencies
+
+  * `enabled` is renamed to `shouldBeAvailable`.
+
+**v1:**
+
+```typescript
+Preferences.enabled(p);
+```
+
+**v2:**
+
+```typescript
+Preferences.shouldBeAvailable(p);
+```
+
+
+### HTML Menu Generation
+
+  * HTML menu generation is removed. (It was basically just function application anyway.)
+
+**v1:**
+
+```typescript
+const menu = Preferences.htmlMenu(generator);
+```
+
+**v2:**
+
+```typescript
+const menu = generator(P);
+```
+
 
 
 ## API Reference

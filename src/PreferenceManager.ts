@@ -1,26 +1,19 @@
 import * as Storage from "ts-storage";
-import {
-    is,
-    isLike,
-    isString,
-} from "ts-type-guards";
+import { is, isString } from "ts-type-guards";
 
 import {
     AllowedTypes,
     Dependency,
     Preference,
 } from "./preferences/Preference";
-import {
-    assertUnreachable,
-    stringify,
-} from "./Utilities";
+import { stringify } from "./Utilities";
 
 export const enum Status {
     OK,
     INVALID_VALUE,
     TYPE_ERROR,
     JSON_ERROR,
-    LOCALSTORAGE_ERROR,
+    STORAGE_ERROR,
 }
 
 export interface Response<T> {
@@ -29,6 +22,14 @@ export interface Response<T> {
     saved?: T
 }
 
+export interface RequestSummary<T extends AllowedTypes> {
+    action: "set" | "get"
+    preference: Preference<T>
+    response: Response<T>
+}
+
+export type ResponseHandler = <T extends AllowedTypes>(summary: RequestSummary<T>, pm: PreferenceManager) => Response<T>;
+
 export interface PreferencesObject {
     readonly [key: string]: Preference<any> | PreferenceGroup
 }
@@ -36,28 +37,27 @@ export interface PreferencesObject {
 export interface PreferenceGroup {
     readonly label: string
     readonly _: PreferencesObject
-    readonly dependencies?: Dependency<any>[]
+    readonly dependencies?: ReadonlyArray<Dependency<any>>
     readonly extras?: { readonly [key: string]: any }
 }
 
-function unknown(p: Preference<any>): string {
-    return `Unknown preference. Please use only preferences from the object used to initialize the ${PreferenceManager.className}. This one is not among them:\n\n${stringify(p)}.`;
-}
+const SIMPLE_RESPONSE_HANDLER: ResponseHandler = (summary, _) => summary.response;
 
 export class PreferenceManager {
-    public static readonly className: string = "PreferenceManager";
-    private readonly LS_PREFIX: string;
     private readonly cache: Map<Preference<any>, any>;
 
-    constructor(preferences: PreferencesObject, localStoragePrefix: string) {
-        this.LS_PREFIX = localStoragePrefix;
-        this.cache = new Map();
+    constructor(
+        preferences: PreferencesObject,
+        private readonly localStoragePrefix: string,
+        private readonly responseHandler: ResponseHandler = SIMPLE_RESPONSE_HANDLER,
+    ) {
+        this.cache = new Map<Preference<any>, any>();
         const seenKeys: string[] = [];
         const allPreferences = flatten(preferences);
 
         allPreferences.forEach(p => {
             const key = p.key;
-            if (seenKeys.indexOf(key) > -1) {
+            if (seenKeys.includes(key)) {
                 throw new Error(`Duplicate preference key ${stringify(key)}.`);
             }
             this.cache.set(p, p.default);
@@ -74,38 +74,72 @@ export class PreferenceManager {
         });
     }
 
-    public get<T extends AllowedTypes>(preference: Preference<T>): Response<T> {
-        const cachedValue: any = this.cache.get(preference);
-        if (!isLike(preference.default)(cachedValue)) {
-            // If we got undefined from cache, the preference was not among the known ones.
-            throw new Error(unknown(preference));
-        }
-        const resp = Storage.get(this.LS_PREFIX + preference.key, preference.default);
-        if (resp.status === Storage.Status.OK) {
-            const validationResult = preference.validate(resp.value);
+    public get<T extends AllowedTypes>(preference: Preference<T>): T {
+        return this.getWith(this.responseHandler, preference);
+    }
+
+    public set<T extends AllowedTypes>(preference: Preference<T>, value: T): void {
+        this.setWith(this.responseHandler, preference, value);
+    }
+
+    public getWith<T extends AllowedTypes>(responseHandler: ResponseHandler, preference: Preference<T>): T {
+        return responseHandler({
+            action: "get",
+            preference,
+            response: this.getRaw(preference),
+        }, this).value;
+    }
+
+    public setWith<T extends AllowedTypes>(responseHandler: ResponseHandler, preference: Preference<T>, value: T): void {
+        responseHandler({
+            action: "set",
+            preference,
+            response: this.setRaw(preference, value),
+        }, this);
+    }
+
+    public reset<T extends AllowedTypes>(preference: Preference<T>): void {
+        // If Storage.remove fails, the user doesn't really need to know, because default values will be used anyway.
+        this.getFromCacheOrThrowIfUnknown(preference);
+        Storage.remove(this.localStoragePrefix + preference.key);
+    }
+
+    public resetAll(): void {
+        for (const p of this.cache.keys()) { this.reset(p); }
+    }
+
+    public shouldBeAvailable<T extends AllowedTypes>(p: Preference<T>): boolean {
+        const isMet = <D extends AllowedTypes>(d: Dependency<D>) => d.condition(this.getRaw(d.preference).value);
+        return p.dependencies.every(isMet);
+    }
+
+    public getRaw<T extends AllowedTypes>(preference: Preference<T>): Response<T> {
+        const cachedValue = this.getFromCacheOrThrowIfUnknown(preference);
+        const response = Storage.get(this.localStoragePrefix + preference.key, preference.default);
+        if (response.status === Storage.Status.OK) {
+            const savedValue = response.value;
+            const validationResult = preference.validate(savedValue);
             return (
                 isString(validationResult)
                 ? {
                     status: Status.INVALID_VALUE,
-                    value: preference.toValid(resp.value),
-                    saved: resp.value,
+                    value: preference.toValid(savedValue),
+                    saved: savedValue,
                 }
                 : {
                     status: Status.OK,
-                    value: resp.value,
+                    value: savedValue,
                 }
             );
         }
         return {
-            status: fromStorageStatus(resp.status),
+            status: fromStorageStatus(response.status),
             value: cachedValue,
         };
     }
 
-    public set<T extends AllowedTypes>(preference: Preference<T>, value: T): Response<T> {
-        if (!isLike(preference.default)(this.cache.get(preference))) {
-            throw new Error(unknown(preference));
-        }
+    public setRaw<T extends AllowedTypes>(preference: Preference<T>, value: T): Response<T> {
+        this.getFromCacheOrThrowIfUnknown(preference);
         if (isString(preference.validate(value))) {
             return {
                 status: Status.INVALID_VALUE,
@@ -113,20 +147,32 @@ export class PreferenceManager {
             };
         }
         this.cache.set(preference, value);
-        const resp = Storage.set(this.LS_PREFIX + preference.key, value);
+        const response = Storage.set(this.localStoragePrefix + preference.key, value);
         return {
-            status: fromStorageStatus(resp.status),
-            value: resp.value,
+            status: fromStorageStatus(response.status),
+            value: response.value,
         };
+    }
+
+    private getFromCacheOrThrowIfUnknown<T extends AllowedTypes>(preference: Preference<T>): T {
+        const cachedValue = this.cache.get(preference);
+        if (cachedValue === undefined) {
+            throw new Error(unknown(preference));
+        }
+        return cachedValue;
     }
 }
 
-export function flatten(tree: PreferencesObject): Preference<any>[] {
-    return Object.keys(tree).map(k => tree[k]).reduce(
+function unknown(p: Preference<any>): string {
+    return `Unknown preference:\n\n${stringify(p)}.`;
+}
+
+function flatten(tree: PreferencesObject): ReadonlyArray<Preference<any>> {
+    return Object.values(tree).reduce(
         (acc, node) => acc.concat(
             is(Preference)(node) ? node : flatten(node._),
         ),
-        [] as Preference<any>[],
+        [] as ReadonlyArray<Preference<any>>,
     );
 }
 
@@ -137,7 +183,6 @@ function fromStorageStatus(s: Storage.Status): Status {
         case Storage.Status.NUMBER_ERROR:       return Status.INVALID_VALUE;
         case Storage.Status.TYPE_ERROR:         return Status.TYPE_ERROR;
         case Storage.Status.JSON_ERROR:         return Status.JSON_ERROR;
-        case Storage.Status.STORAGE_ERROR:      return Status.LOCALSTORAGE_ERROR;
+        case Storage.Status.STORAGE_ERROR:      return Status.STORAGE_ERROR;
     }
-    return assertUnreachable(s);
 }
